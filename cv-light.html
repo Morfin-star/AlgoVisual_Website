@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Laura Alejandra Gómez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #ffffff;
+    --surface: #f4f1f9;
+    --border:  #ddd8e8;
+    --ink:     #1a1726;
+    --body:    #3d3450;
+    --muted:   #6b5f7a;
+    --coral:   #c96b68;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  @media print {
+    html, body { width: 210mm; height: 297mm; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-btn { display: none; }
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 400;
+    background: #e8e4f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 32px 0 64px;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: var(--bg);
+    display: grid;
+    grid-template-columns: 76mm 1fr;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.12);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--surface);
+    padding: 40px 28px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .sidebar-divider {
+    width: 32px;
+    height: 1px;
+    background: var(--coral);
+    opacity: 0.6;
+  }
+
+  .sidebar-block { display: flex; flex-direction: column; gap: 10px; }
+
+  .sidebar-label {
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  .sidebar-item {
+    font-size: 11px;
+    color: var(--body);
+    font-weight: 300;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .sidebar-item a {
+    color: var(--coral);
+    text-decoration: none;
+  }
+
+  .tool-list { display: flex; flex-direction: column; gap: 7px; }
+
+  .tool-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tool-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--coral);
+    flex-shrink: 0;
+  }
+
+  .tool-name {
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .tool-type {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .lang-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .lang-item { display: flex; flex-direction: column; gap: 2px; }
+
+  .lang-name { font-size: 11px; color: var(--ink); }
+
+  .lang-level { font-size: 10px; color: var(--muted); font-weight: 300; }
+
+  /* ── MAIN ── */
+  .main {
+    padding: 40px 36px 40px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .section-label {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 10px;
+  }
+
+  .pitch {
+    font-size: 12px;
+    color: var(--body);
+    font-weight: 300;
+    line-height: 1.75;
+    border-left: 2px solid var(--coral);
+    padding-left: 14px;
+  }
+
+  .pitch strong { color: var(--ink); font-weight: 500; }
+
+  /* Projects */
+  .projects { display: flex; flex-direction: column; gap: 13px; }
+
+  .project-entry {
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .project-entry:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3px;
+  }
+
+  .project-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .project-year {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .project-desc {
+    font-size: 10.5px;
+    color: var(--body);
+    font-weight: 300;
+    line-height: 1.55;
+    margin-bottom: 5px;
+  }
+
+  .project-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+
+  .project-tag {
+    font-size: 9px;
+    color: var(--coral);
+    border: 1px solid rgba(201,107,104,0.35);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Experience & Education */
+  .exp-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+
+  .exp-title {
+    font-size: 11.5px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .exp-period {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .exp-org {
+    font-size: 10px;
+    color: var(--coral);
+    margin-bottom: 3px;
+  }
+
+  .exp-desc {
+    font-size: 10.5px;
+    color: var(--body);
+    font-weight: 300;
+    line-height: 1.55;
+  }
+
+  /* Print button */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--coral);
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 9999px;
+    letter-spacing: 0.04em;
+  }
+
+  .print-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div>
+      <p class="sidebar-name">Laura Alejandra<br>Gómez</p>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-block">
+      <p class="sidebar-label">Contacto</p>
+      <div class="sidebar-item">
+        <span>laura.a.gomez99@gmail.com</span>
+        <span>610 537 302</span>
+        <span>Madrid, España</span>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <p class="sidebar-label">Portfolio</p>
+      <div class="sidebar-item">
+        <a href="#">algo_visual.com</a>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <p class="sidebar-label">LinkedIn</p>
+      <div class="sidebar-item">
+        <a href="https://www.linkedin.com/in/lauraagomezp/">linkedin.com/in/lauraagomezp</a>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <p class="sidebar-label">Idiomas</p>
+      <div class="lang-list">
+        <div class="lang-item">
+          <span class="lang-name">Español</span>
+          <span class="lang-level">Nativo</span>
+        </div>
+        <div class="lang-item">
+          <span class="lang-name">Inglés</span>
+          <span class="lang-level">C1 — Avanzado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <p class="sidebar-label">Herramientas</p>
+      <div class="tool-list">
+        <div class="tool-item">
+          <div class="tool-dot"></div>
+          <div>
+            <div class="tool-name">Premiere Pro</div>
+            <div class="tool-type">Edición de video</div>
+          </div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-dot"></div>
+          <div>
+            <div class="tool-name">DaVinci Resolve</div>
+            <div class="tool-type">Color grading</div>
+          </div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-dot"></div>
+          <div>
+            <div class="tool-name">Photoshop</div>
+            <div class="tool-type">Retoque · Composición</div>
+          </div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-dot"></div>
+          <div>
+            <div class="tool-name">After Effects</div>
+            <div class="tool-type">Motion graphics</div>
+          </div>
+        </div>
+        <div class="tool-item">
+          <div class="tool-dot"></div>
+          <div>
+            <div class="tool-name">Lightroom</div>
+            <div class="tool-type">Fotografía · Color</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- PITCH -->
+    <div>
+      <p class="section-label">Sobre mí</p>
+      <p class="pitch">
+        Creadora audiovisual con base en <strong>psicología</strong> y formación especializada en comunicación audiovisual (TAI, Madrid).
+        Trabajo en <strong>edición de video, fotografía de artista y marca, y dirección creativa</strong> para proyectos de principio a fin.
+        Disponible para proyectos freelance y prácticas en empresas creativas.
+      </p>
+    </div>
+
+    <!-- PROYECTOS -->
+    <div>
+      <p class="section-label">Proyectos</p>
+      <div class="projects">
+
+        <div class="project-entry">
+          <div class="project-header">
+            <span class="project-name">INSONO — Spider Lily</span>
+            <span class="project-year">2026</span>
+          </div>
+          <p class="project-desc">Videoclip oficial y estrategia de contenido completa para el primer single del EP de la artista Spider Lily. Producción de más de 8 piezas para redes, portadas para Spotify y pósters de lanzamiento.</p>
+          <div class="project-tags">
+            <span class="project-tag">Edición de video</span>
+            <span class="project-tag">Dirección de arte</span>
+            <span class="project-tag">Contenido de marca</span>
+          </div>
+        </div>
+
+        <div class="project-entry">
+          <div class="project-header">
+            <span class="project-name">Spider Lily — Branding fotográfico</span>
+            <span class="project-year">2026</span>
+          </div>
+          <p class="project-desc">Sesión de fotografía de artista para construir la identidad visual de Spider Lily. Fotografía y edición completa orientada a redes sociales y prensa.</p>
+          <div class="project-tags">
+            <span class="project-tag">Fotografía</span>
+            <span class="project-tag">Edición</span>
+            <span class="project-tag">Branding</span>
+          </div>
+        </div>
+
+        <div class="project-entry">
+          <div class="project-header">
+            <span class="project-name">Taller de cerámica — Fotografía de producto</span>
+            <span class="project-year">2024</span>
+          </div>
+          <p class="project-desc">Sesión fotográfica completa para taller artesanal. Retoque, corrección de color, póster y materiales para redes sociales.</p>
+          <div class="project-tags">
+            <span class="project-tag">Fotografía</span>
+            <span class="project-tag">Retoque</span>
+          </div>
+        </div>
+
+        <div class="project-entry">
+          <div class="project-header">
+            <span class="project-name">Logitech — Mini-commercial</span>
+            <span class="project-year">2023</span>
+          </div>
+          <p class="project-desc">Spot audiovisual para Logitech Gaming desarrollado como proyecto de producción audiovisual en TAI. Análisis de marca, dirección creativa, plan de rodaje, montaje y color.</p>
+          <div class="project-tags">
+            <span class="project-tag">Dirección creativa</span>
+            <span class="project-tag">Producción</span>
+            <span class="project-tag">Montaje</span>
+          </div>
+        </div>
+
+        <div class="project-entry">
+          <div class="project-header">
+            <span class="project-name">Aquelarre — Dirección creativa</span>
+            <span class="project-year">2023 — presente</span>
+          </div>
+          <p class="project-desc">Co-fundadora y directora de producción audiovisual de Aquelarre, comunidad hispanohablante de gaming femenino. Estrategia de contenido, identidad visual y coordinación de torneos y eventos.</p>
+          <div class="project-tags">
+            <span class="project-tag">Dirección creativa</span>
+            <span class="project-tag">Contenido de marca</span>
+            <span class="project-tag">Comunidad</span>
+          </div>
+        </div>
+
+        <div class="project-entry">
+          <div class="project-header">
+            <span class="project-name">Ariana — Fotografía de producto y styling</span>
+            <span class="project-year">2024</span>
+          </div>
+          <p class="project-desc">Sesión completa para marca de pañoletas y twillies. Dirección de styling con modelos, fotografía de producto en flat lay y edición de color.</p>
+          <div class="project-tags">
+            <span class="project-tag">Fotografía</span>
+            <span class="project-tag">Styling</span>
+            <span class="project-tag">Edición</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EXPERIENCIA -->
+    <div>
+      <p class="section-label">Experiencia</p>
+      <div class="exp-list">
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-title">Co-fundadora · Dirección creativa</span>
+            <span class="exp-period">2023 — presente</span>
+          </div>
+          <p class="exp-org">Aquelarre — Comunidad de gaming femenino</p>
+          <p class="exp-desc">Dirección creativa y producción audiovisual de la comunidad. Estrategia de contenido en TikTok e Instagram, coordinación de torneos y eventos presenciales.</p>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-title">Creadora de contenido autónoma</span>
+            <span class="exp-period">2021 — presente</span>
+          </div>
+          <p class="exp-org">Morfin — Gaming content</p>
+          <p class="exp-desc">Producción, edición y estrategia de contenido independiente en Twitch, TikTok e Instagram centrada en la comunidad femenina del gaming.</p>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-title">Intern of TA · Recruiter</span>
+            <span class="exp-period">2023</span>
+          </div>
+          <p class="exp-org">Sunderland</p>
+          <p class="exp-desc">Gestión y organización de múltiples procesos de selección simultáneos.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- EDUCACIÓN -->
+    <div>
+      <p class="section-label">Educación</p>
+      <div class="exp-list">
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-title">Diplomatura en Creación y Comunicación Audiovisual</span>
+            <span class="exp-period">2025/26</span>
+          </div>
+          <p class="exp-org">TAI — Escuela de Artes, Madrid</p>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-title">Psicología</span>
+            <span class="exp-period">2023</span>
+          </div>
+          <p class="exp-org">Pontificia Universidad Javeriana, Bogotá</p>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-header">
+            <span class="exp-title">Bachiller Bilingüe</span>
+            <span class="exp-period">2017</span>
+          </div>
+          <p class="exp-org">Gimnasio Fontana, Bogotá</p>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">Exportar PDF</button>
+
+</body>
+</html>

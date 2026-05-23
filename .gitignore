@@ -1,0 +1,8 @@
+node_modules/
+screenshots/
+temporary screenshots/
+*.mjs
+package.json
+package-lock.json
+brand_guidelines.html
+CLAUDE.Website.md
