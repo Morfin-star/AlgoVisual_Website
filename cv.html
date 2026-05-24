@@ -58,6 +58,20 @@
     border-right: 1px solid var(--border);
   }
 
+  .sidebar-photo-wrap {
+    margin: -40px -28px 0;
+    aspect-ratio: 3/2;
+    overflow: hidden;
+  }
+  .sidebar-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    filter: saturate(0.8);
+  }
+
   .sidebar-name {
     font-family: 'Syne', sans-serif;
     font-weight: 700;
@@ -284,6 +298,10 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
 
+    <div class="sidebar-photo-wrap">
+      <img src="assets/foto.webp" alt="Alejandra Gómez">
+    </div>
+
     <div>
       <p class="sidebar-name">Laura Alejandra<br>Gómez</p>
     </div>
@@ -374,91 +392,6 @@
         Trabajo en <strong>edición de video, fotografía de artista y marca, y dirección creativa</strong> para proyectos de principio a fin.
         Disponible para proyectos freelance y prácticas en empresas creativas.
       </p>
-    </div>
-
-    <!-- PROYECTOS -->
-    <div>
-      <p class="section-label">Proyectos</p>
-      <div class="projects">
-
-        <div class="project-entry">
-          <div class="project-header">
-            <span class="project-name">INSONO — Spider Lily</span>
-            <span class="project-year">2026</span>
-          </div>
-          <p class="project-desc">Videoclip oficial y estrategia de contenido completa para el primer single del EP de la artista Spider Lily. Producción de más de 8 piezas para redes, portadas para Spotify y pósters de lanzamiento.</p>
-          <div class="project-tags">
-            <span class="project-tag">Edición de video</span>
-            <span class="project-tag">Dirección de arte</span>
-            <span class="project-tag">Contenido de marca</span>
-          </div>
-        </div>
-
-        <div class="project-entry">
-          <div class="project-header">
-            <span class="project-name">Spider Lily — Branding fotográfico</span>
-            <span class="project-year">2026</span>
-          </div>
-          <p class="project-desc">Sesión de fotografía de artista para construir la identidad visual de Spider Lily. Fotografía y edición completa orientada a redes sociales y prensa.</p>
-          <div class="project-tags">
-            <span class="project-tag">Fotografía</span>
-            <span class="project-tag">Edición</span>
-            <span class="project-tag">Branding</span>
-          </div>
-        </div>
-
-        <div class="project-entry">
-          <div class="project-header">
-            <span class="project-name">Taller de cerámica — Fotografía de producto</span>
-            <span class="project-year">2024</span>
-          </div>
-          <p class="project-desc">Sesión fotográfica completa para taller artesanal. Retoque, corrección de color, póster y materiales para redes sociales.</p>
-          <div class="project-tags">
-            <span class="project-tag">Fotografía</span>
-            <span class="project-tag">Retoque</span>
-          </div>
-        </div>
-
-        <div class="project-entry">
-          <div class="project-header">
-            <span class="project-name">Logitech · Proyecto académico</span>
-            <span class="project-year">2023</span>
-          </div>
-          <p class="project-desc">Spot audiovisual para Logitech Gaming desarrollado como proyecto de fin de primer año. Análisis DAFO de marca, dirección creativa, plan de rodaje, montaje y color.</p>
-          <div class="project-tags">
-            <span class="project-tag">Dirección creativa</span>
-            <span class="project-tag">Producción</span>
-            <span class="project-tag">Montaje</span>
-          </div>
-        </div>
-
-        <div class="project-entry">
-          <div class="project-header">
-            <span class="project-name">Aquelarre — Dirección creativa</span>
-            <span class="project-year">2023 — presente</span>
-          </div>
-          <p class="project-desc">Co-fundadora y directora de producción audiovisual de Aquelarre, comunidad hispanohablante de gaming femenino. Estrategia de contenido, identidad visual y coordinación de torneos y eventos.</p>
-          <div class="project-tags">
-            <span class="project-tag">Dirección creativa</span>
-            <span class="project-tag">Contenido de marca</span>
-            <span class="project-tag">Comunidad</span>
-          </div>
-        </div>
-
-        <div class="project-entry">
-          <div class="project-header">
-            <span class="project-name">Ariana — Fotografía de producto y styling</span>
-            <span class="project-year">2024</span>
-          </div>
-          <p class="project-desc">Sesión completa para marca de pañoletas y twillies. Dirección de styling con modelos, fotografía de producto en flat lay y edición de color.</p>
-          <div class="project-tags">
-            <span class="project-tag">Fotografía</span>
-            <span class="project-tag">Styling</span>
-            <span class="project-tag">Edición</span>
-          </div>
-        </div>
-
-      </div>
     </div>
 
     <!-- EXPERIENCIA -->
