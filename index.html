@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>algo_visual — Alejandra Gómez</title>
+  <link rel="icon" href="data:image/svg+xml,<svg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'><circle cx='60' cy='60' r='56' fill='%23f0ecf7'/><path d='M 60 7 C 80 4,108 20,113 46 C 118 70,102 88,82 94 C 68 98,50 90,46 77 C 42 64,52 50,44 36 C 36 22,40 9,60 7 Z' fill='%230f0d14'/><path d='M 60 113 C 40 116,12 100,7 74 C 2 50,18 32,38 26 C 52 22,70 30,74 44 C 78 56,68 70,76 84 C 84 97,80 111,60 113 Z' fill='%230f0d14'/></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -767,8 +768,8 @@
 
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 400px;
-      gap: 80px;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
       align-items: center;
     }
 
@@ -815,13 +816,21 @@
       letter-spacing: 0.05em;
     }
 
-    .about-img-wrap { position: relative; aspect-ratio: 4/3; overflow: hidden; border-radius: 8px; }
+    .about-img-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .about-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
+      height: 580px;
+      width: auto;
+      flex-shrink: 0;
+      transform: rotate(-90deg);
       display: block;
       filter: saturate(0.75);
     }
@@ -1455,15 +1464,10 @@
   <!-- NAV -->
   <nav>
     <a href="#" class="nav-logo">
-      <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <mask id="nav-mark-cut">
-            <rect width="100" height="100" fill="white"/>
-            <circle cx="72" cy="28" r="33" fill="black"/>
-          </mask>
-        </defs>
-        <circle cx="50" cy="50" r="43" fill="#f0ecf7" mask="url(#nav-mark-cut)"/>
-        <circle cx="50" cy="50" r="45" stroke="#c4b5d6" stroke-width="2.5" fill="none"/>
+      <svg width="30" height="30" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="56" fill="#f0ecf7"/>
+        <path d="M 60 7 C 80 4, 108 20, 113 46 C 118 70, 102 88, 82 94 C 68 98, 50 90, 46 77 C 42 64, 52 50, 44 36 C 36 22, 40 9, 60 7 Z" fill="#0f0d14"/>
+        <path d="M 60 113 C 40 116, 12 100, 7 74 C 2 50, 18 32, 38 26 C 52 22, 70 30, 74 44 C 78 56, 68 70, 76 84 C 84 97, 80 111, 60 113 Z" fill="#0f0d14"/>
       </svg>
       <span class="wordmark"><span class="w-a">algo</span><span class="w-u">_</span><span class="w-v">visual</span></span>
     </a>
