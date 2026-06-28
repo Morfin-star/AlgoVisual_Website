@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>El Círculo de Aquelarre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #09071A;
+      --bg-e:      #0E0C24;
+      --gold:      #C9A84C;
+      --gold-l:    #E8C87A;
+      --purple:    #6B4F9E;
+      --purple-d:  #3D1B6B;
+      --text:      #EDE8F5;
+      --muted:     #8E7FAA;
+      --parch-text:#4A1E8C;
+      --border:    rgba(201,168,76,0.28);
+      --border-s:  rgba(201,168,76,0.10);
+      --error:     #c96b68;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 45% at 15% 5%,  rgba(107,79,158,0.20) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 35% at 85% 95%, rgba(201,168,76,0.07) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── SCREENS ─────────────────────────────── */
+    .screen {
+      display: none;
+      position: relative;
+      min-height: 100dvh;
+      padding: 32px 24px 48px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    .screen.active {
+      display: flex;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(0.96); }
+    }
+
+    .screen.exiting {
+      display: flex !important;
+      animation: fadeOut 0.32s cubic-bezier(0.4, 0, 1, 1) both;
+      pointer-events: none;
+    }
+
+    /* ── INTRO — COSMIC ─────────────────────── */
+    #s0 {
+      padding: 48px 24px 56px;
+      overflow: hidden;
+    }
+
+    .intro-cosmos {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 100% 55% at 50% 5%,  rgba(107,79,158,0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 60%  50% at 10% 90%, rgba(61,27,107,0.35)  0%, transparent 55%),
+        radial-gradient(ellipse 40%  35% at 90% 65%, rgba(201,168,76,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 30%  25% at 50% 55%, rgba(107,79,158,0.12) 0%, transparent 55%);
+    }
+
+    /* hero group: ring + logo float together */
+    .intro-hero-group {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+      animation: heroFloat 4.5s ease-in-out infinite, logoGlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    @keyframes logoGlow {
+      0%, 100% { filter: drop-shadow(0 0 14px rgba(201,168,76,0.28)) drop-shadow(0 0 50px rgba(107,79,158,0.22)); }
+      50%       { filter: drop-shadow(0 0 30px rgba(201,168,76,0.60)) drop-shadow(0 0 90px rgba(107,79,158,0.48)); }
+    }
+
+.intro-logo {
+      width: 240px;
+      animation: fadeIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+    }
+
+    .intro-body {
+      font-size: 13px;
+      line-height: 1.85;
+      color: var(--muted);
+      text-align: center;
+      max-width: 280px;
+      font-style: italic;
+      margin-bottom: 10px;
+      animation: fadeIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.8s both;
+    }
+
+    /* gold divider line */
+    .intro-divider {
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #C9A84C 40%, #C9A84C 60%, transparent);
+      margin: 12px 0 14px;
+      animation: drawLine 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.3s forwards;
+    }
+
+    @keyframes drawLine {
+      to { width: 160px; }
+    }
+
+    .intro-call {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      line-height: 2;
+      color: var(--text);
+      text-align: center;
+      width: min(360px, 92vw);
+      margin-bottom: 28px;
+      min-height: 44px;
+    }
+
+    .cursor {
+      display: inline-block;
+      color: #C9A84C;
+      animation: blink 0.65s step-end infinite;
+      font-weight: 300;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .btn-scroll {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold-l);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 15px 28px;
+      cursor: pointer;
+      min-height: 52px;
+      width: 100%;
+      max-width: 280px;
+      transition: background 0.22s ease;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 1.5s both;
+    }
+
+    .btn-scroll:hover, .btn-scroll:focus-visible {
+      background: rgba(201,168,76,0.09);
+      outline: none;
+    }
+
+    .btn-scroll:active {
+      background: rgba(201,168,76,0.16);
+      transform: scale(0.98);
+    }
+
+    /* ── ARCANO SCREEN ───────────────────────── */
+    .arcano-counter {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.65;
+      margin-bottom: 10px;
+    }
+
+    .progress {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .pip {
+      width: 28px;
+      height: 2px;
+      background: var(--border-s);
+      border: 1px solid var(--border);
+      transition: background 0.35s ease;
+    }
+
+    .pip.done    { background: var(--gold); border-color: var(--gold); }
+    .pip.current { background: rgba(201,168,76,0.38); border-color: var(--gold); }
+
+    /* ── CARD ────────────────────────────────── */
+    .card-scene {
+      width: 210px;
+      height: 320px;
+      perspective: 900px;
+      cursor: pointer;
+      margin-bottom: 0;
+      flex-shrink: 0;
+      animation: heroFloat 4.5s ease-in-out infinite, cardGlow 3.5s ease-in-out infinite;
+    }
+
+    .card-scene.revealed {
+      animation: none;
+    }
+
+    @keyframes cardGlow {
+      0%, 100% { filter: drop-shadow(0 0 14px rgba(201,168,76,0.22)) drop-shadow(0 0 42px rgba(107,79,158,0.22)); }
+      50%       { filter: drop-shadow(0 0 28px rgba(201,168,76,0.50)) drop-shadow(0 0 80px rgba(107,79,158,0.42)); }
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.72s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+
+    .card-inner.flipped { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-front-face {
+      transform: rotateY(180deg);
+    }
+
+    .tap-hint {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: #E8C87A;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      animation: breathe 2.2s ease-in-out infinite;
+      transition: opacity 0.3s ease;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.35; }
+      50%       { opacity: 1; }
+    }
+
+    /* ── ARCANO CONTENT (below card, shown after flip) ── */
+    .arcano-content {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 320px;
+      margin-top: 16px;
+    }
+
+    .arcano-content.visible {
+      display: flex;
+      animation: fadeIn 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+
+    .acertijo-box {
+      border-left: 2px solid var(--gold);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      width: 100%;
+      background: rgba(201,168,76,0.04);
+    }
+
+    .acertijo-text {
+      font-family: 'Cinzel', serif;
+      font-size: 11.5px;
+      line-height: 1.75;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .pista-label {
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .pista-text {
+      font-size: 10.5px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    /* ── PHASE SECTIONS (actividad, social) ── */
+    .phase-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 320px;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .phase-section.active {
+      display: flex;
+      animation: fadeIn 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+
+    /* ── INFO BLOCKS (emprendimiento, actividad, social) ── */
+    .info-block {
+      width: 100%;
+      padding: 11px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .emprendimiento-block {
+      border: 1px solid rgba(201,168,76,0.20);
+      background: rgba(201,168,76,0.04);
+    }
+
+    .actividad-block {
+      border: 1px solid rgba(107,79,158,0.28);
+      background: rgba(107,79,158,0.06);
+    }
+
+    .social-block {
+      border: 1px solid rgba(107,79,158,0.18);
+      background: rgba(107,79,158,0.04);
+      margin-bottom: 16px;
+    }
+
+    .info-label {
+      font-size: 7.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.65;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .info-name {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      line-height: 1.3;
+    }
+
+    .info-handle {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      display: block;
+    }
+
+    .info-body {
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .social-caption-text {
+      display: block;
+      margin-top: 8px;
+      font-size: 9.5px;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.06em;
+      color: var(--gold-l);
+      border-left: 2px solid rgba(201,168,76,0.50);
+      padding-left: 10px;
+      opacity: 0.85;
+      line-height: 1.6;
+    }
+
+    /* ── CODE SECTION ────────────────────────── */
+    .code-section {
+      width: 100%;
+      max-width: 320px;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      display: none;
+    }
+
+    .code-section.visible {
+      display: flex;
+      animation: fadeIn 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+
+    .code-label {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.75;
+      font-style: italic;
+    }
+
+    .code-input {
+      width: 100%;
+      background: rgba(201,168,76,0.03);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      letter-spacing: 0.14em;
+      text-align: center;
+      padding: 14px 20px;
+      min-height: 52px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 0;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .code-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 14px rgba(201,168,76,0.11);
+    }
+
+    .code-input::placeholder {
+      color: var(--muted);
+      opacity: 0.45;
+      letter-spacing: 0.24em;
+      font-size: 10px;
+    }
+
+    .code-error {
+      font-size: 10.5px;
+      color: var(--error);
+      letter-spacing: 0.06em;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      min-height: 16px;
+    }
+
+    .code-error.show { opacity: 1; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60%  { transform: translateX(-5px); }
+      40%, 80%  { transform: translateX(5px); }
+    }
+
+    .shake { animation: shake 0.38s ease; }
+
+    /* ── BUTTON ──────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold-l);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 15px 28px;
+      cursor: pointer;
+      min-height: 52px;
+      width: 100%;
+      max-width: 280px;
+      transition: background 0.22s ease;
+    }
+
+    .btn:hover, .btn:focus-visible {
+      background: rgba(201,168,76,0.09);
+      outline: none;
+    }
+
+    .btn:active {
+      background: rgba(201,168,76,0.16);
+      transform: scale(0.98);
+    }
+
+    /* ── CIERRE ──────────────────────────────── */
+    .cierre-symbol {
+      width: 108px;
+      height: 108px;
+      margin-bottom: 28px;
+      animation: glow 2.8s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(201,168,76,0.35)); }
+      50%       { filter: drop-shadow(0 0 26px rgba(201,168,76,0.65)); }
+    }
+
+    .cierre-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 19px;
+      font-weight: 900;
+      color: var(--gold-l);
+      text-align: center;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      text-shadow: 0 0 28px rgba(201,168,76,0.35);
+    }
+
+    .cierre-body {
+      font-size: 13px;
+      line-height: 1.85;
+      color: var(--muted);
+      text-align: center;
+      max-width: 290px;
+      font-style: italic;
+      margin-bottom: 36px;
+    }
+
+    .cierre-body em {
+      color: var(--text);
+      font-style: normal;
+    }
+
+    .cierre-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      padding: 12px 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ SCREEN 0 — INTRO COSMIC ══ -->
+  <div class="screen active" id="s0">
+    <!-- nebula backdrop -->
+    <div class="intro-cosmos" aria-hidden="true"></div>
+
+    <!-- star field -->
+    <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <circle cx="34"  cy="67"  r="0.9" fill="white" opacity="0.40"/>
+      <circle cx="112" cy="23"  r="0.7" fill="white" opacity="0.28"/>
+      <circle cx="178" cy="145" r="1.1" fill="white" opacity="0.50"/>
+      <circle cx="267" cy="34"  r="0.8" fill="white" opacity="0.32"/>
+      <circle cx="312" cy="89"  r="1.2" fill="white" opacity="0.55"/>
+      <circle cx="45"  cy="190" r="0.7" fill="white" opacity="0.25"/>
+      <circle cx="356" cy="134" r="0.9" fill="white" opacity="0.38"/>
+      <circle cx="89"  cy="245" r="1.0" fill="white" opacity="0.44"/>
+      <circle cx="223" cy="178" r="0.8" fill="white" opacity="0.30"/>
+      <circle cx="145" cy="289" r="1.3" fill="white" opacity="0.60"/>
+      <circle cx="334" cy="267" r="0.7" fill="white" opacity="0.28"/>
+      <circle cx="23"  cy="312" r="0.9" fill="white" opacity="0.42"/>
+      <circle cx="189" cy="56"  r="1.5" fill="#E8C87A" opacity="0.45"/>
+      <circle cx="298" cy="112" r="1.0" fill="white" opacity="0.36"/>
+      <circle cx="67"  cy="445" r="0.8" fill="white" opacity="0.24"/>
+      <circle cx="234" cy="523" r="1.1" fill="white" opacity="0.48"/>
+      <circle cx="367" cy="389" r="0.7" fill="white" opacity="0.22"/>
+      <circle cx="312" cy="489" r="0.9" fill="white" opacity="0.35"/>
+      <circle cx="89"  cy="623" r="1.2" fill="white" opacity="0.42"/>
+      <circle cx="345" cy="578" r="0.8" fill="white" opacity="0.28"/>
+      <circle cx="156" cy="678" r="1.0" fill="white" opacity="0.38"/>
+      <circle cx="45"  cy="756" r="0.7" fill="white" opacity="0.22"/>
+      <circle cx="267" cy="734" r="1.3" fill="white" opacity="0.50"/>
+      <circle cx="178" cy="812" r="0.9" fill="white" opacity="0.32"/>
+      <circle cx="323" cy="789" r="1.1" fill="white" opacity="0.44"/>
+      <!-- accent gold stars -->
+      <circle cx="56"  cy="145" r="1.5" fill="#C9A84C" opacity="0.55"/>
+      <circle cx="334" cy="678" r="1.4" fill="#C9A84C" opacity="0.45"/>
+    </svg>
+
+    <!-- hero: logo -->
+    <div class="intro-hero-group">
+      <img class="intro-logo" src="images/logo-gold.png" alt="El Círculo de Aquelarre">
+    </div>
+
+    <!-- text -->
+    <p class="intro-body">
+      El círculo de Aquelarre está incompleto. Los 4 arcanos fueron entregados a los guardianes del universo geek.
+    </p>
+    <div class="intro-divider"></div>
+    <p class="intro-call" id="intro-call"></p>
+
+    <button class="btn-scroll" onclick="showArcano(0)">
+      Comenzar la misión
+      <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+        <path d="M6.5 1l3.5 3.5L6.5 8M10 4.5H1" stroke="#E8C87A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- ══ SCREEN 1–4 — ARCANOS (dinámico) ══ -->
+  <div class="screen" id="s-arcano"></div>
+
+  <!-- ══ SCREEN 5 — CIERRE ══ -->
+  <div class="screen" id="s5">
+    <svg class="cierre-symbol" viewBox="0 0 108 108" fill="none">
+      <circle cx="54" cy="54" r="51" stroke="#C9A84C" stroke-width="1.4"/>
+      <circle cx="54" cy="54" r="38" stroke="#C9A84C" stroke-width="0.5" stroke-opacity="0.45"/>
+      <polygon points="54,9 95.3,75.5 12.7,75.5" stroke="#C9A84C" stroke-width="1.2" fill="rgba(201,168,76,0.06)"/>
+      <polygon points="54,99 12.7,32.5 95.3,32.5" stroke="#C9A84C" stroke-width="0.7" fill="none" stroke-opacity="0.45"/>
+      <circle cx="54"   cy="54"   r="5"   fill="#C9A84C"/>
+      <circle cx="54"   cy="9"    r="2.5" fill="#C9A84C"/>
+      <circle cx="95.3" cy="75.5" r="2.5" fill="#C9A84C"/>
+      <circle cx="12.7" cy="75.5" r="2.5" fill="#C9A84C"/>
+      <circle cx="54"   cy="99"   r="1.8" fill="#C9A84C" fill-opacity="0.55"/>
+      <circle cx="12.7" cy="32.5" r="1.8" fill="#C9A84C" fill-opacity="0.55"/>
+      <circle cx="95.3" cy="32.5" r="1.8" fill="#C9A84C" fill-opacity="0.55"/>
+    </svg>
+    <h2 class="cierre-title">El Círculo<br>ha despertado</h2>
+    <p class="cierre-body">
+      Las cuatro guardianas han reconocido tu poder.<br>
+      Los arcanos han vuelto al círculo.<br><br>
+      <em>Regresa al stand de Aquelarre<br>para reclamar tu premio.</em>
+    </p>
+    <div class="cierre-badge">Aquelarre · ComicCon Bogotá 2026</div>
+  </div>
+
+  <script>
+    // ── TYPEWRITER INTRO ──────────────────────
+    (function() {
+      const el = document.getElementById('intro-call');
+      if (!el) return;
+      const lines = ['Solo quienes sean dignas de reclamarlos,', 'podrán despertarlo.'];
+      const full  = lines[0] + '\n' + lines[1];
+      let i = 0;
+
+      setTimeout(() => {
+        const tick = () => {
+          if (i <= full.length) {
+            const slice = full.slice(0, i);
+            el.innerHTML = slice.replace('\n', '<br>') +
+              (i < full.length ? '<span class="cursor">|</span>' : '');
+            i++;
+            setTimeout(tick, 30);
+          }
+        };
+        tick();
+      }, 2000); // empieza después de que la línea dorada termina
+    })();
+
+    const ARCANOS = [
+      {
+        img:            'images/la-maga.png',
+        nombre:         'La Maga',
+        acertijo:       '"La primera guardiana domina el poder de las cartas y los mundos de batalla. Su prueba es de habilidad — demuestra que eres digna."',
+        pista:          'Busca una tienda de juegos de mesa.',
+        emprendimiento: 'Tienda Movitec',
+        handle:         '@tienda_movitec',
+        actividad:      'Lanza los dados — si sacas más de 7, superas la prueba. Si no lo logras, haz una sentadilla rápida y vuelve a intentarlo.',
+        social:         'Foto con el dado ganador → sube a Stories etiquetando a @tienda_movitec y a @aql.team. Muéstrasela al vendedor para recibir la palabra.',
+        caption:        '¡Reto superado en @tienda_movitec! @aql.team',
+        label:          'La guardiana te ha concedido su arcano. Pronuncia la palabra:',
+        code:           'voluntad'
+      },
+      {
+        img:            'images/la-emperatriz.png',
+        nombre:         'La Emperatriz',
+        acertijo:       '"La Emperatriz no habla — observa. Su poder vive en miles de mundos dibujados, en historias que nunca terminan."',
+        pista:          'Busca una tienda de manga y cómics — segunda entrada del evento.',
+        emprendimiento: 'Grafam Comic Shop',
+        handle:         '@grafam_comicshop',
+        actividad:      'Encuentra 3 tomos con portada roja en los estantes, agrúpalos y tómales una foto juntos.',
+        social:         'Sube la foto a Stories etiquetando a @grafam_comicshop y a @aql.team. Muéstrasela al vendedor para recibir la palabra.',
+        caption:        '¡Reto superado en @grafam_comicshop! @aql.team',
+        label:          'Has superado la prueba de la imaginación. Escribe la palabra concedida:',
+        code:           'historia'
+      },
+      {
+        img:            'images/la-rueda.png',
+        nombre:         'La Rueda de la Fortuna',
+        acertijo:       '"La Rueda no pregunta qué quieres. Gira sola. Su guardiana abraza el universo geek en cada pieza."',
+        pista:          'Busca una tienda de comodidad y merch geek — Pabellón 11.',
+        emprendimiento: 'Yamylú Slippers',
+        handle:         '@yamylu_slippers',
+        actividad:      'El tendero gritará el nombre de un personaje. Tienes 5 segundos para encontrar su producto y abrazarlo. ¡Sin dudas!',
+        social:         'Selfie abrazando el producto → sube a Stories etiquetando a @yamylu_slippers y a @aql.team. Muéstrasela al vendedor para recibir la palabra.',
+        caption:        '¡Salvada por [personaje] en @yamylu_slippers! @aql.team',
+        label:          'El destino ya fue pronunciado. Recuerda la palabra que recibiste:',
+        code:           'destino'
+      },
+      {
+        img:            'images/la-estrella.png',
+        nombre:         'La Estrella',
+        acertijo:       '"La Estrella guía a quienes no temen la oscuridad. La prueba final revela a las verdaderas iniciadas."',
+        pista:          'Busca un artista que crea arte y prendas personalizadas.',
+        emprendimiento: 'Pure Art',
+        handle:         '@pure_art1010',
+        actividad:      'El artista tiene un detalle especial escondido en su stand. Encuéntralo y tómale una foto de cerca.',
+        social:         'Foto al detalle → sube a Stories etiquetando a @pure_art1010 y a @aql.team. Muéstrasela al artista para recibir la última palabra.',
+        caption:        '¡Lo encontré en @pure_art1010! @aql.team',
+        label:          'El círculo casi despierta. Ingresa el último arcano:',
+        code:           'luz'
+      }
+    ];
+
+    let currentIdx  = 0;
+    let cardFlipped = false;
+
+    function renderArcano(idx) {
+      currentIdx  = idx;
+      cardFlipped = false;
+      const a = ARCANOS[idx];
+
+      const pips = ARCANOS.map((_, i) => {
+        const cls = i < idx ? 'done' : i === idx ? 'current' : '';
+        return `<div class="pip ${cls}"></div>`;
+      }).join('');
+
+      document.getElementById('s-arcano').innerHTML = `
+        <div class="arcano-counter">Arcano ${idx + 1} de 4</div>
+        <div class="progress">${pips}</div>
+
+        <div class="card-scene" id="card-scene" onclick="flipCard()">
+          <div class="card-inner" id="card-inner">
+
+            <div class="card-face card-back-face">
+              <img src="images/portada.png" alt="Aquelarre">
+            </div>
+
+            <div class="card-face card-front-face">
+              <img src="${a.img}" alt="${a.nombre}">
+            </div>
+
+          </div>
+        </div>
+        <span class="tap-hint" id="tap-hint">Toca para revelar</span>
+
+        <!-- FASE 1: acertijo + pista + "Lo encontré" -->
+        <div class="arcano-content" id="arcano-content">
+          <div class="acertijo-box">
+            <p class="acertijo-text">${a.acertijo}</p>
+            <span class="pista-label">Pista</span>
+            <span class="pista-text">${a.pista}</span>
+          </div>
+          <button class="btn" onclick="showActividad()">
+            Lo encontré
+            <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M6.5 1l3.5 3.5L6.5 8M10 4.5H1" stroke="#E8C87A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <!-- FASE 2: reto + contraseña -->
+        <div class="phase-section" id="phase-actividad">
+          <div class="info-block actividad-block">
+            <span class="info-label">Tu misión</span>
+            <p class="info-body">${a.actividad}</p>
+          </div>
+          <p class="code-label">${a.label}</p>
+          <input
+            class="code-input"
+            id="code-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="···"
+            onkeydown="if(event.key==='Enter') checkCode()"
+          >
+          <p class="code-error" id="code-error">El arcano no reconoce esas palabras. Inténtalo de nuevo.</p>
+          <button class="btn" onclick="checkCode()">Invocar</button>
+        </div>
+
+        <!-- FASE 3: emprendimiento + social + siguiente (se revela tras la contraseña) -->
+        <div class="phase-section" id="phase-social">
+          <div class="info-block emprendimiento-block">
+            <span class="info-label">Emprendimiento</span>
+            <span class="info-name">${a.emprendimiento}</span>
+            <span class="info-handle">${a.handle}</span>
+          </div>
+          <div class="info-block social-block">
+            <span class="info-label">No olvides</span>
+            <p class="info-body">${a.social}</p>
+            <span class="social-caption-text">${a.caption}</span>
+          </div>
+          <button class="btn" onclick="advanceArcano()">
+            ${idx < ARCANOS.length - 1 ? 'Siguiente arcano' : 'Despertar el círculo'}
+            <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M6.5 1l3.5 3.5L6.5 8M10 4.5H1" stroke="#E8C87A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      `;
+
+      showScreen('s-arcano');
+    }
+
+    function showArcano(idx) {
+      const arcanoEl = document.getElementById('s-arcano');
+      if (arcanoEl.classList.contains('active')) {
+        // ya está activo: animar salida → actualizar → animar entrada
+        arcanoEl.classList.add('exiting');
+        arcanoEl.addEventListener('animationend', () => {
+          arcanoEl.classList.remove('exiting', 'active');
+          renderArcano(idx);
+          void arcanoEl.offsetWidth; // force reflow
+          arcanoEl.classList.add('active');
+        }, { once: true });
+      } else {
+        renderArcano(idx);
+        showScreen('s-arcano');
+      }
+    }
+
+    function flipCard() {
+      if (cardFlipped) return;
+      cardFlipped = true;
+      document.getElementById('card-inner').classList.add('flipped');
+      document.getElementById('card-scene').classList.add('revealed');
+      const tap = document.getElementById('tap-hint');
+      if (tap) tap.style.opacity = '0';
+
+      setTimeout(() => {
+        const ac = document.getElementById('arcano-content');
+        if (ac) ac.classList.add('visible');
+      }, 820);
+    }
+
+    function showActividad() {
+      const p1 = document.getElementById('arcano-content');
+      p1.style.transition = 'opacity 0.22s ease';
+      p1.style.opacity = '0';
+      setTimeout(() => {
+        p1.style.display = 'none';
+        const p2 = document.getElementById('phase-actividad');
+        p2.classList.add('active');
+        setTimeout(() => {
+          const inp = document.getElementById('code-input');
+          if (inp) inp.focus();
+        }, 350);
+      }, 240);
+    }
+
+    function advanceArcano() {
+      if (currentIdx < ARCANOS.length - 1) {
+        showArcano(currentIdx + 1);
+      } else {
+        showScreen('s5');
+      }
+    }
+
+    function checkCode() {
+      const inp   = document.getElementById('code-input');
+      const err   = document.getElementById('code-error');
+      const value = inp.value.trim().toLowerCase();
+
+      if (value === ARCANOS[currentIdx].code) {
+        err.classList.remove('show');
+        const p2 = document.getElementById('phase-actividad');
+        p2.style.transition = 'opacity 0.22s ease';
+        p2.style.opacity = '0';
+        setTimeout(() => {
+          p2.style.display = 'none';
+          const p3 = document.getElementById('phase-social');
+          p3.classList.add('active');
+        }, 240);
+      } else {
+        err.classList.add('show');
+        inp.classList.add('shake');
+        inp.addEventListener('animationend', () => inp.classList.remove('shake'), { once: true });
+        inp.value = '';
+        inp.focus();
+      }
+    }
+
+    function showScreen(id) {
+      const current = document.querySelector('.screen.active');
+      const next    = document.getElementById(id);
+      if (!current || current === next) {
+        if (next) next.classList.add('active');
+        return;
+      }
+      current.classList.add('exiting');
+      current.addEventListener('animationend', () => {
+        current.classList.remove('active', 'exiting');
+        next.classList.add('active');
+      }, { once: true });
+    }
+  </script>
+
+</body>
+</html>
