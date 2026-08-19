@@ -710,6 +710,10 @@
   .scenario-card--reached .scenario-card__status strong {
     color: var(--menta);
   }
+  .scenario-card__detalle {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
 
   .super-meta {
     margin-top: 24px;
@@ -1101,24 +1105,36 @@
     return tiers.reduce((sum, t) => sum + boletasVendidas[t.key] * t.price, 0);
   }
 
+  const etapaLabelCorto = { preventa1: '1ª etapa', preventa2: '2ª etapa', taquilla: 'taquilla' };
+
+  function formatDetalle(detalle) {
+    return Object.entries(detalle)
+      .map(([key, n]) => `${n} en ${etapaLabelCorto[key]}`)
+      .join(' + ');
+  }
+
   function boletasFaltantesPara(gapCOP) {
     const ingresoActual = boletasRevenue();
-    if (gapCOP <= ingresoActual) return { boletas: 0, cubierto: true, alcanzable: true };
+    if (gapCOP <= ingresoActual) return { boletas: 0, cubierto: true, alcanzable: true, detalle: {} };
     let restante = gapCOP - ingresoActual;
     let boletas = 0;
+    const detalle = {};
     for (const t of tiers) {
       const stockRestante = cupoPorEtapa[t.key] - boletasVendidas[t.key];
       if (stockRestante <= 0) continue;
       const capacidadCOP = stockRestante * t.price;
       if (capacidadCOP >= restante) {
-        boletas += Math.ceil(restante / t.price);
+        const n = Math.ceil(restante / t.price);
+        boletas += n;
+        detalle[t.key] = (detalle[t.key] || 0) + n;
         restante = 0;
         break;
       }
       boletas += stockRestante;
+      detalle[t.key] = (detalle[t.key] || 0) + stockRestante;
       restante -= capacidadCOP;
     }
-    return { boletas, cubierto: false, alcanzable: restante <= 0 };
+    return { boletas, cubierto: false, alcanzable: restante <= 0, detalle };
   }
 
   function totalBoletasVendidas() {
@@ -1133,11 +1149,12 @@
       const egresosTotales = egresosConfirmados + pendiente;
       const meta = Math.max(egresosTotales - sponsorsFijos, 0);
       const pct = meta === 0 ? 100 : Math.min((ingresoActual / meta) * 100, 100);
-      const { boletas, cubierto, alcanzable } = boletasFaltantesPara(meta);
+      const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(meta);
       const metaTotalBoletas = vendidasHoy + boletas;
       const statusRight = cubierto
         ? 'Meta cubierta'
         : (alcanzable ? `Faltan ${boletas} (meta: ${metaTotalBoletas} boletas)` : 'No alcanza ni con todo el aforo');
+      const detalleLine = (!cubierto && alcanzable) ? `<div class="scenario-card__detalle">${formatDetalle(detalle)}</div>` : '';
       return `
         <div class="scenario-card ${cubierto ? 'scenario-card--reached' : ''}">
           <span class="scenario-card__label">${escenarioLabel[key]}</span>
@@ -1147,6 +1164,7 @@
             <span>${vendidasHoy} vendidas</span>
             <strong>${statusRight}</strong>
           </div>
+          ${detalleLine}
         </div>`;
     }).join('');
   }
@@ -1168,6 +1186,19 @@
     return total;
   }
 
+  function detalleParaCantidadTotal(nObjetivoTotal) {
+    let faltan = Math.max(nObjetivoTotal - totalBoletasVendidas(), 0);
+    const detalle = {};
+    for (const t of tiers) {
+      if (faltan <= 0) break;
+      const stockRestante = cupoPorEtapa[t.key] - boletasVendidas[t.key];
+      const usar = Math.min(faltan, stockRestante);
+      if (usar > 0) detalle[t.key] = usar;
+      faltan -= usar;
+    }
+    return detalle;
+  }
+
   function renderSuperMeta() {
     const el = document.getElementById('super-meta');
     const vendidasHoy = totalBoletasVendidas();
@@ -1175,12 +1206,15 @@
     const ingresosAlSuperMeta = ingresosParaNBoletas(SUPER_META_PERSONAS);
     const metaMedio = Math.max((egresosConfirmados + egresosPendientesEstimado.medio) - sponsorsFijos, 0);
     const ingresoEquipo = Math.max(ingresosAlSuperMeta - metaMedio, 0);
+    const detalle = detalleParaCantidadTotal(SUPER_META_PERSONAS);
+    const detalleLine = faltan > 0 ? `<p class="super-meta__note" style="margin-top:4px;">${formatDetalle(detalle)}</p>` : '';
 
     el.innerHTML = `
       <div>
         <p class="super-meta__label">Súper meta</p>
         <p class="super-meta__headline">${SUPER_META_PERSONAS} personas${faltan > 0 ? ` — faltan ${faltan} boletas` : ' — ¡ya la alcanzamos!'}</p>
         <p class="super-meta__note">Con el escenario medio de egresos, esto es lo que quedaría disponible para repartir entre el equipo organizador una vez cubiertos los gastos y devuelta la inversión.</p>
+        ${detalleLine}
       </div>
       <div class="super-meta__stat">
         <div class="super-meta__stat-amount">${formatCOP(ingresoEquipo)}</div>
