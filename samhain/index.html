@@ -729,12 +729,19 @@
     border-top: 1px dashed var(--ring);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+  }
+  .scenario-card__team-title {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 0;
   }
   .scenario-card__team-row {
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    flex-direction: column;
+    gap: 2px;
     font-size: 13px;
     color: var(--text-dim);
     font-variant-numeric: tabular-nums;
@@ -742,6 +749,7 @@
   .scenario-card__team-row strong {
     color: var(--text);
     font-weight: 700;
+    font-size: 15px;
   }
 
   /* ---------- sponsors ---------- */
@@ -1154,8 +1162,9 @@
           </div>
           ${detalleLine}
           <div class="scenario-card__team">
-            <div class="scenario-card__team-row"><span>A 150 boletas</span><strong>${formatCOP(equipoA150)}</strong></div>
-            <div class="scenario-card__team-row"><span>Aforo completo (${AFORO_TOTAL})</span><strong>${formatCOP(equipoAforo)}</strong></div>
+            <p class="scenario-card__team-title">Para repartir entre el equipo:</p>
+            <div class="scenario-card__team-row"><span>Si vendemos 150 boletas</span><strong>→ ${formatCOP(equipoA150)}</strong></div>
+            <div class="scenario-card__team-row"><span>Si se agotan las ${AFORO_TOTAL} boletas</span><strong>→ ${formatCOP(equipoAforo)}</strong></div>
           </div>
         </div>`;
     }).join('');
