@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <title>Samhain</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -883,9 +884,101 @@
   @media (prefers-reduced-motion: reduce) {
     .wordmark, .cta, .ticket__bar-fill { animation: none !important; transition: none !important; }
   }
+
+  /* ---------- password gate ---------- */
+  .site-content--locked { display: none; }
+  #password-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--void);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  #password-gate.hidden { display: none; }
+  .gate-card {
+    max-width: 380px;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--ring);
+    border-radius: 20px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .gate-card__word {
+    font-family: 'Rebork', cursive;
+    font-size: 40px;
+    margin: 0 0 8px;
+    background-image: var(--holo);
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .gate-card__note {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin: 0 0 26px;
+  }
+  .gate-card input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--ring);
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 16px;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .gate-card input:focus-visible {
+    outline: 2px solid var(--menta);
+    outline-offset: 2px;
+  }
+  .gate-card button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 999px;
+    border: none;
+    background-image: var(--holo);
+    background-size: 260% 100%;
+    color: #150a1c;
+    font-weight: 700;
+    font-size: 15px;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+  }
+  .gate-card button:focus-visible {
+    outline: 2px solid var(--menta);
+    outline-offset: 2px;
+  }
+  .gate-card__error {
+    color: var(--rosa-fuerte);
+    font-size: 13px;
+    margin: 14px 0 0;
+    display: none;
+  }
+  .gate-card__error.visible { display: block; }
 </style>
 </head>
 <body>
+
+<div id="password-gate">
+  <div class="gate-card">
+    <p class="gate-card__word">Samhain</p>
+    <p class="gate-card__note">Esta página es solo para el equipo. Escribe la contraseña para entrar.</p>
+    <form id="gate-form">
+      <input type="password" id="gate-input" placeholder="Contraseña" autocomplete="off">
+      <button type="submit">Entrar</button>
+      <p class="gate-card__error" id="gate-error">Contraseña incorrecta, intenta de nuevo.</p>
+    </form>
+  </div>
+</div>
+
+<div id="site-content" class="site-content--locked">
 
 <div class="grain" aria-hidden="true">
   <svg width="100%" height="100%">
@@ -1094,7 +1187,33 @@
   </div>
 </footer>
 
+</div>
+
 <script>
+  // --- password gate ---
+  const GATE_PASSWORD = 'salami';
+  const GATE_STORAGE_KEY = 'samhain-unlocked';
+
+  function unlockSite() {
+    document.getElementById('site-content').classList.remove('site-content--locked');
+    document.getElementById('password-gate').classList.add('hidden');
+  }
+
+  if (localStorage.getItem(GATE_STORAGE_KEY) === 'true') {
+    unlockSite();
+  } else {
+    document.getElementById('gate-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = document.getElementById('gate-input').value.trim().toLowerCase();
+      if (val === GATE_PASSWORD) {
+        localStorage.setItem(GATE_STORAGE_KEY, 'true');
+        unlockSite();
+      } else {
+        document.getElementById('gate-error').classList.add('visible');
+      }
+    });
+  }
+
   // --- editable ticket data ---
   const boletasVendidas = { preventa1: 17, preventa2: 0, taquilla: 0 };
   const cupoPorEtapa = { preventa1: 60, preventa2: 100, taquilla: 40 };
