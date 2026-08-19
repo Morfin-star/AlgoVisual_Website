@@ -738,6 +738,10 @@
     font-weight: 500;
     margin-left: 4px;
   }
+  .scenario-card__detalle {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
   .scenario-card__team {
     margin-top: 4px;
     padding-top: 14px;
@@ -1195,6 +1199,19 @@
     return total;
   }
 
+  function detalleParaNBoletas(n) {
+    let restante = n;
+    const detalle = {};
+    for (const t of tiers) {
+      if (restante <= 0) break;
+      const cupo = cupoPorEtapa[t.key];
+      const usar = Math.min(restante, cupo);
+      if (usar > 0) detalle[t.key] = usar;
+      restante -= usar;
+    }
+    return detalle;
+  }
+
   const GARANTIA_BARRA_PCT = 0.20; // % de la boletería que Aquelarre debe cubrir si no se llega al mínimo de consumo que pide La Mecánica
   const NIVELES_VENTA_PCT = [0.20, 0.40, 0.80]; // % de aforo para las 3 tarjetas de ganancia
 
@@ -1202,13 +1219,16 @@
   const egresosTotalesMedio = egresosConfirmados + egresosPendientesEstimado.medio;
   const metaMedio = Math.max(egresosTotalesMedio - sponsorsFijos, 0);
   const colchonMedio = ingresosFijos - egresosTotalesMedio;
+  // meta real del punto de equilibrio: contempla el peor caso de la garantía de barra —
+  // si hay que pagarle a La Mecánica el 20% de la boletería, solo queda el 80% neto para cerrar la meta
+  const metaMedioConBarra = metaMedio / (1 - GARANTIA_BARRA_PCT);
 
   function renderEquilibrioBox() {
     const el = document.getElementById('equilibrio-box');
     const ingresoActual = boletasRevenue();
     const vendidasHoy = totalBoletasVendidas();
-    const pct = metaMedio === 0 ? 100 : Math.min((ingresoActual / metaMedio) * 100, 100);
-    const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(metaMedio);
+    const pct = metaMedioConBarra === 0 ? 100 : Math.min((ingresoActual / metaMedioConBarra) * 100, 100);
+    const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(metaMedioConBarra);
     const metaTotalBoletas = vendidasHoy + boletas;
     const statusRight = cubierto
       ? 'Meta cubierta'
@@ -1219,6 +1239,7 @@
       <p class="equilibrio-box__title">Punto de equilibrio — recuperar la inversión</p>
       <div class="equilibrio-box__total">${formatCOP(egresosTotalesMedio)} <small style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);">egresos totales (escenario medio)</small></div>
       <p class="equilibrio-box__colchon">Colchón: ${formatCOP(colchonMedio)}</p>
+      <p class="equilibrio-box__colchon" style="color:var(--rosa-fuerte);">Meta ajustada por si no se llega al mínimo de barra (20% a La Mecánica): ${formatCOP(metaMedioConBarra)}</p>
       <div class="equilibrio-box__bar-track"><div class="equilibrio-box__bar-fill" style="width:${pct}%"></div></div>
       <div class="equilibrio-box__status">
         <span>${vendidasHoy} vendidas</span>
@@ -1236,11 +1257,13 @@
       const ingresos = ingresosParaNBoletas(n);
       const ganancia = Math.max(ingresos - metaMedio, 0);
       const pagoMecanica = ingresos * GARANTIA_BARRA_PCT;
+      const detalle = detalleParaNBoletas(n);
 
       return `
         <div class="scenario-card">
           <span class="scenario-card__label">${Math.round(pct * 100)}% del aforo</span>
           <div class="scenario-card__total">${n} <small>boletas vendidas</small></div>
+          <div class="scenario-card__detalle">${formatDetalle(detalle)}</div>
           <div class="scenario-card__team" style="border-top:none; padding-top:0; margin-top:2px;">
             <div class="scenario-card__team-row"><span>Ganancia total</span><strong>${formatCOP(ganancia)}</strong></div>
             <div class="scenario-card__team-row"><span>Pago a La Mecánica (20% barra)</span><strong class="scenario-card__team-row--warn">-${formatCOP(pagoMecanica)}</strong></div>
@@ -1256,10 +1279,12 @@
     const ingresosAforo = ingresosParaNBoletas(AFORO_TOTAL);
     const ganancia = Math.max(ingresosAforo - metaMedio, 0);
     const pagoMecanica = ingresosAforo * GARANTIA_BARRA_PCT;
+    const detalle = detalleParaNBoletas(AFORO_TOTAL);
 
     el.innerHTML = `
       <p class="risk-box__title">Súper meta — 100% del aforo (${AFORO_TOTAL} boletas)</p>
       <p class="risk-box__text">Si se agotan las ${AFORO_TOTAL} boletas, usando el escenario medio de egresos.</p>
+      <p class="risk-box__text" style="margin-bottom:12px;">${formatDetalle(detalle)}</p>
       <div class="risk-box__rows">
         <div class="risk-box__row"><span>Ganancia para el equipo</span><strong class="risk-box__row--ok">${formatCOP(ganancia)}</strong></div>
         <div class="risk-box__row"><span>Pago a La Mecánica (20% barra)</span><strong>-${formatCOP(pagoMecanica)}</strong></div>
