@@ -354,10 +354,14 @@
   }
   .lineup-card__name {
     font-family: 'Rebork', cursive;
-    font-size: 27px;
+    font-size: 23px;
     margin: 0 0 8px;
     color: var(--text);
     letter-spacing: 0.01em;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
   }
   .lineup-card__note {
     color: var(--text-dim);
@@ -707,6 +711,66 @@
     color: var(--menta);
   }
 
+  .super-meta {
+    margin-top: 24px;
+    background: var(--surface);
+    border: 1.5px solid var(--purpura);
+    border-radius: 20px;
+    padding: 28px 26px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 20px;
+  }
+  @media (max-width: 640px) {
+    .super-meta { grid-template-columns: 1fr; text-align: center; }
+  }
+  .super-meta__label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rosa-fuerte);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .super-meta__headline {
+    font-family: 'Rebork', cursive;
+    font-size: 24px;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+  .super-meta__note {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: 0;
+  }
+  .super-meta__stat {
+    text-align: center;
+    padding: 14px 22px;
+    border-radius: 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--ring);
+  }
+  .super-meta__stat-amount {
+    font-family: 'Rebork', cursive;
+    font-size: 30px;
+    background-image: var(--holo);
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .super-meta__stat-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-top: 6px;
+  }
+
   /* ---------- sponsors ---------- */
   .sponsor-strip {
     display: flex;
@@ -956,6 +1020,8 @@
 
     <div class="scenario-grid" id="scenario-grid"><!-- filled by JS --></div>
     <p class="budget-note">Los tres escenarios asumen que los $1.200.000 de patrocinios no incluyen tu inversión propia — esa se recupera aparte, con boletería. Las barras se actualizan solas según cuánto llevas vendido.</p>
+
+    <div class="super-meta" id="super-meta"><!-- filled by JS --></div>
   </div>
 </section>
 
@@ -1085,6 +1151,43 @@
     }).join('');
   }
   renderScenarios();
+
+  // --- súper meta: 150 personas, ingreso proyectado para el equipo ---
+  const SUPER_META_PERSONAS = 150;
+
+  function ingresosParaNBoletas(n) {
+    let restante = n;
+    let total = 0;
+    for (const t of tiers) {
+      const cupo = cupoPorEtapa[t.key];
+      const usar = Math.min(restante, cupo);
+      total += usar * t.price;
+      restante -= usar;
+      if (restante <= 0) break;
+    }
+    return total;
+  }
+
+  function renderSuperMeta() {
+    const el = document.getElementById('super-meta');
+    const vendidasHoy = totalBoletasVendidas();
+    const faltan = Math.max(SUPER_META_PERSONAS - vendidasHoy, 0);
+    const ingresosAlSuperMeta = ingresosParaNBoletas(SUPER_META_PERSONAS);
+    const metaMedio = Math.max((egresosConfirmados + egresosPendientesEstimado.medio) - sponsorsFijos, 0);
+    const ingresoEquipo = Math.max(ingresosAlSuperMeta - metaMedio, 0);
+
+    el.innerHTML = `
+      <div>
+        <p class="super-meta__label">Súper meta</p>
+        <p class="super-meta__headline">${SUPER_META_PERSONAS} personas${faltan > 0 ? ` — faltan ${faltan} boletas` : ' — ¡ya la alcanzamos!'}</p>
+        <p class="super-meta__note">Con el escenario medio de egresos, esto es lo que quedaría disponible para repartir entre el equipo organizador una vez cubiertos los gastos y devuelta la inversión.</p>
+      </div>
+      <div class="super-meta__stat">
+        <div class="super-meta__stat-amount">${formatCOP(ingresoEquipo)}</div>
+        <div class="super-meta__stat-label">Ingreso para el equipo</div>
+      </div>`;
+  }
+  renderSuperMeta();
 
   // --- countdown ---
   function tickCountdown() {
