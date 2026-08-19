@@ -751,19 +751,25 @@
     font-weight: 700;
     font-size: 15px;
   }
+  .scenario-card__team-row strong.scenario-card__team-row--warn {
+    color: var(--rosa-fuerte);
+  }
 
   .risk-box {
     margin-top: 24px;
     background: var(--surface);
-    border: 1.5px dashed var(--rosa-fuerte);
+    border: 1.5px dashed var(--purpura);
     border-radius: 20px;
     padding: 24px 26px;
+  }
+  .risk-box__row strong.risk-box__row--ok {
+    color: var(--menta);
   }
   .risk-box__title {
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--rosa-fuerte);
+    color: var(--lila-claro);
     font-weight: 700;
     margin: 0 0 10px;
   }
@@ -1031,7 +1037,7 @@
   <div class="wrap">
     <p class="eyebrow">Meta</p>
     <h2 class="section-title">Recuperar la inversión</h2>
-    <p class="section-sub">Detalle de egresos (confirmados + estimados) más arriba, en "Presupuesto del evento". Acá: para cada escenario de gasto, el colchón que deja el ingreso fijo, cuántas boletas faltan para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000), y cuánto quedaría para repartir entre el equipo si llegamos a 150 boletas (súper meta) o agotamos el aforo (200).</p>
+    <p class="section-sub">Detalle de egresos (confirmados + estimados) más arriba, en "Presupuesto del evento". Acá: para cada escenario de gasto, el colchón que deja el ingreso fijo, cuántas boletas faltan para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000), y cuánto ganaría el equipo — y le tocaría pagarle a La Mecánica por la barra — según cuánto se venda.</p>
 
     <div class="scenario-grid" id="scenario-grid"><!-- filled by JS --></div>
     <p class="budget-note">El colchón sale de restar los egresos totales al ingreso fijo ($2.000.000) — es la plata que ya está en mano antes de vender una sola boleta, pero incluye devolver tu inversión, así que no es ganancia todavía. El ingreso para el equipo solo empieza a contar boletería después de eso. Todo se recalcula solo según cuánto llevas vendido.</p>
@@ -1158,7 +1164,6 @@
   }
 
   const AFORO_TOTAL = tiers.reduce((sum, t) => sum + cupoPorEtapa[t.key], 0);
-  const SUPER_META_PERSONAS = 150;
 
   function ingresosParaNBoletas(n) {
     let restante = n;
@@ -1173,12 +1178,13 @@
     return total;
   }
 
+  const GARANTIA_BARRA_PCT = 0.20; // % de la boletería que Aquelarre debe cubrir si no se llega al mínimo de consumo que pide La Mecánica
+  const ventaAsumidaPct = { medio: 0.40, alto: 0.80 }; // % de aforo asumido para calcular ganancia; "bajo" usa su propio punto de equilibrio
+
   function renderScenarios() {
     const grid = document.getElementById('scenario-grid');
     const ingresoActual = boletasRevenue();
     const vendidasHoy = totalBoletasVendidas();
-    const ingresosA150 = ingresosParaNBoletas(SUPER_META_PERSONAS);
-    const ingresosAforoCompleto = ingresosParaNBoletas(AFORO_TOTAL);
 
     grid.innerHTML = Object.entries(egresosPendientesEstimado).map(([key, pendiente]) => {
       const egresosTotales = egresosConfirmados + pendiente;
@@ -1196,8 +1202,15 @@
         : colchon > 0
           ? `<div class="scenario-card__colchon">Colchón: ${formatCOP(colchon)}</div>`
           : `<div class="scenario-card__colchon scenario-card__colchon--neg">Sin colchón — faltan ${formatCOP(-colchon)} del ingreso fijo</div>`;
-      const equipoA150 = Math.max(ingresosA150 - meta, 0);
-      const equipoAforo = Math.max(ingresosAforoCompleto - meta, 0);
+
+      // supuesto de venta: "bajo" usa su propio punto de equilibrio; medio/alto usan el % de aforo asignado
+      const nAsumido = key === 'bajo' ? metaTotalBoletas : Math.round(AFORO_TOTAL * ventaAsumidaPct[key]);
+      const supuestoLabel = key === 'bajo'
+        ? `En el punto de equilibrio (${nAsumido} boletas)`
+        : `Si se vende ${Math.round(ventaAsumidaPct[key] * 100)}% del aforo (${nAsumido} boletas)`;
+      const ingresosAsumidos = ingresosParaNBoletas(nAsumido);
+      const ganancia = Math.max(ingresosAsumidos - meta, 0);
+      const pagoMecanica = ingresosAsumidos * GARANTIA_BARRA_PCT;
 
       return `
         <div class="scenario-card ${cubierto ? 'scenario-card--reached' : ''}">
@@ -1211,34 +1224,32 @@
           </div>
           ${detalleLine}
           <div class="scenario-card__team">
-            <p class="scenario-card__team-title">Para repartir entre el equipo:</p>
-            <div class="scenario-card__team-row"><span>Si vendemos 150 boletas</span><strong>→ ${formatCOP(equipoA150)}</strong></div>
-            <div class="scenario-card__team-row"><span>Si se agotan las ${AFORO_TOTAL} boletas</span><strong>→ ${formatCOP(equipoAforo)}</strong></div>
+            <p class="scenario-card__team-title">${supuestoLabel}</p>
+            <div class="scenario-card__team-row"><span>Ganancia para el equipo</span><strong>${formatCOP(ganancia)}</strong></div>
+            <div class="scenario-card__team-row"><span>Pago a La Mecánica (20% barra)</span><strong class="scenario-card__team-row--warn">-${formatCOP(pagoMecanica)}</strong></div>
           </div>
         </div>`;
     }).join('');
   }
   renderScenarios();
 
-  // --- riesgo: garantía de consumo mínimo en barra ---
-  const GARANTIA_BARRA_PCT = 0.20; // % de la boletería que Aquelarre debe cubrir si no se llega al mínimo de consumo que pide La Mecánica
-
-  function renderRiesgoBarra() {
+  // --- súper meta: 100% del aforo agotado ---
+  function renderSuperMeta() {
     const el = document.getElementById('risk-box');
-    const hoy = boletasRevenue();
-    const a150 = ingresosParaNBoletas(SUPER_META_PERSONAS);
-    const aforo = ingresosParaNBoletas(AFORO_TOTAL);
+    const metaMedio = Math.max((egresosConfirmados + egresosPendientesEstimado.medio) - sponsorsFijos, 0);
+    const ingresosAforo = ingresosParaNBoletas(AFORO_TOTAL);
+    const ganancia = Math.max(ingresosAforo - metaMedio, 0);
+    const pagoMecanica = ingresosAforo * GARANTIA_BARRA_PCT;
 
     el.innerHTML = `
-      <p class="risk-box__title">Riesgo — garantía de barra</p>
-      <p class="risk-box__text">La Mecánica pide un consumo mínimo en barra. Si el grupo no llega a ese mínimo, Aquelarre tiene que cubrir la diferencia: el 20% de lo vendido en boletería. Esto se resta del ingreso para el equipo antes de repartir — no está descontado en los números de arriba.</p>
+      <p class="risk-box__title">Súper meta — 100% del aforo (${AFORO_TOTAL} boletas)</p>
+      <p class="risk-box__text">Si se agotan las ${AFORO_TOTAL} boletas, usando el escenario medio de egresos.</p>
       <div class="risk-box__rows">
-        <div class="risk-box__row"><span>Con lo vendido hoy</span><strong>-${formatCOP(hoy * GARANTIA_BARRA_PCT)}</strong></div>
-        <div class="risk-box__row"><span>Si vendemos 150 boletas</span><strong>-${formatCOP(a150 * GARANTIA_BARRA_PCT)}</strong></div>
-        <div class="risk-box__row"><span>Si se agotan las ${AFORO_TOTAL} boletas</span><strong>-${formatCOP(aforo * GARANTIA_BARRA_PCT)}</strong></div>
+        <div class="risk-box__row"><span>Ganancia para el equipo</span><strong class="risk-box__row--ok">${formatCOP(ganancia)}</strong></div>
+        <div class="risk-box__row"><span>Pago a La Mecánica (20% barra)</span><strong>-${formatCOP(pagoMecanica)}</strong></div>
       </div>`;
   }
-  renderRiesgoBarra();
+  renderSuperMeta();
 
   // --- countdown ---
   function tickCountdown() {
