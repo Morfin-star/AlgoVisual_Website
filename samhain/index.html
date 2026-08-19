@@ -643,6 +643,61 @@
   }
 
   /* ---------- meta / punto de equilibrio ---------- */
+  .equilibrio-box {
+    background: var(--surface);
+    border: 1px solid var(--ring);
+    border-radius: 20px;
+    padding: 26px 26px 24px;
+    margin-bottom: 24px;
+  }
+  .equilibrio-box__title {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+  .equilibrio-box__total {
+    font-family: 'Rebork', cursive;
+    font-size: 24px;
+    color: var(--text);
+    margin: 0 0 6px;
+  }
+  .equilibrio-box__colchon {
+    font-size: 13px;
+    color: var(--menta);
+    margin: 0 0 16px;
+  }
+  .equilibrio-box__bar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    overflow: hidden;
+    border: 1px solid var(--ring);
+    margin-bottom: 12px;
+  }
+  .equilibrio-box__bar-fill {
+    height: 100%;
+    background-image: var(--holo);
+    background-size: 260% 100%;
+    border-radius: 999px;
+  }
+  .equilibrio-box__status {
+    font-size: 14px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .equilibrio-box__status strong { color: var(--menta); font-weight: 700; }
+  .equilibrio-box__detalle {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 6px;
+  }
+
   .scenario-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -682,48 +737,6 @@
     color: var(--text-faint);
     font-weight: 500;
     margin-left: 4px;
-  }
-  .scenario-card__bar-track {
-    height: 8px;
-    border-radius: 999px;
-    background: var(--surface-2);
-    overflow: hidden;
-    border: 1px solid var(--ring);
-  }
-  .scenario-card__bar-fill {
-    height: 100%;
-    background-image: var(--holo);
-    background-size: 260% 100%;
-    border-radius: 999px;
-    transition: width 0.6s cubic-bezier(0.2,0.8,0.2,1);
-  }
-  .scenario-card__status {
-    font-size: 13px;
-    color: var(--text-dim);
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-variant-numeric: tabular-nums;
-  }
-  .scenario-card__status strong {
-    color: var(--menta);
-    font-weight: 700;
-  }
-  .scenario-card--reached .scenario-card__status strong {
-    color: var(--menta);
-  }
-  .scenario-card__detalle {
-    font-size: 12px;
-    color: var(--text-faint);
-  }
-  .scenario-card__colchon {
-    font-size: 12.5px;
-    color: var(--menta);
-    font-variant-numeric: tabular-nums;
-  }
-  .scenario-card__colchon--neg {
-    color: var(--rosa-fuerte);
   }
   .scenario-card__team {
     margin-top: 4px;
@@ -1040,10 +1053,12 @@
   <div class="wrap">
     <p class="eyebrow">Meta</p>
     <h2 class="section-title">Recuperar la inversión</h2>
-    <p class="section-sub">Detalle de egresos (confirmados + estimados) más arriba, en "Presupuesto del evento". Acá: para cada escenario de gasto, el colchón que deja el ingreso fijo, cuántas boletas faltan para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000), y cuánto ganaría el equipo — y le tocaría pagarle a La Mecánica por la barra — según cuánto se venda.</p>
+    <p class="section-sub">Detalle de egresos (confirmados + estimados) más arriba, en "Presupuesto del evento" — presupuesto de referencia: escenario medio. Primero, cuánto falta vender para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000). Después, la ganancia total y lo que tocaría pagarle a La Mecánica por la barra en tres niveles de venta: 20%, 40% y 80% del aforo.</p>
+
+    <div class="equilibrio-box" id="equilibrio-box"><!-- filled by JS --></div>
 
     <div class="scenario-grid" id="scenario-grid"><!-- filled by JS --></div>
-    <p class="budget-note">El colchón sale de restar los egresos totales al ingreso fijo ($2.000.000) — es la plata que ya está en mano antes de vender una sola boleta, pero incluye devolver tu inversión, así que no es ganancia todavía. El ingreso para el equipo solo empieza a contar boletería después de eso. Todo se recalcula solo según cuánto llevas vendido.</p>
+    <p class="budget-note">Las tres tarjetas usan el mismo presupuesto (escenario medio, $1.848.000 en egresos totales) — la única variable es cuánto se vende. La ganancia total ya resta lo necesario para recuperar la inversión; el pago a La Mecánica es aparte, no está descontado de la ganancia.</p>
 
     <div class="risk-box" id="risk-box"><!-- filled by JS --></div>
   </div>
@@ -1124,7 +1139,6 @@
     medio: 868000, // manillas 121k + tarjetas 40k + decoración 305k + espacio 152k + pauta 150k + influencers 100k (pauta e influencers fijados por Alejandra; colchón resultante 152k)
     alto: 1800000,
   };
-  const escenarioLabel = { bajo: 'Escenario bajo — equilibrio', medio: 'Escenario medio', alto: 'Escenario alto' };
 
   function boletasRevenue() {
     return tiers.reduce((sum, t) => sum + boletasVendidas[t.key] * t.price, 0);
@@ -1182,53 +1196,53 @@
   }
 
   const GARANTIA_BARRA_PCT = 0.20; // % de la boletería que Aquelarre debe cubrir si no se llega al mínimo de consumo que pide La Mecánica
-  const ventaAsumidaPct = { medio: 0.40, alto: 0.80 }; // % de aforo asumido para calcular ganancia; "bajo" usa su propio punto de equilibrio
+  const NIVELES_VENTA_PCT = [0.20, 0.40, 0.80]; // % de aforo para las 3 tarjetas de ganancia
+
+  // presupuesto de referencia único para toda esta sección: escenario medio
+  const egresosTotalesMedio = egresosConfirmados + egresosPendientesEstimado.medio;
+  const metaMedio = Math.max(egresosTotalesMedio - sponsorsFijos, 0);
+  const colchonMedio = ingresosFijos - egresosTotalesMedio;
+
+  function renderEquilibrioBox() {
+    const el = document.getElementById('equilibrio-box');
+    const ingresoActual = boletasRevenue();
+    const vendidasHoy = totalBoletasVendidas();
+    const pct = metaMedio === 0 ? 100 : Math.min((ingresoActual / metaMedio) * 100, 100);
+    const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(metaMedio);
+    const metaTotalBoletas = vendidasHoy + boletas;
+    const statusRight = cubierto
+      ? 'Meta cubierta'
+      : (alcanzable ? `Faltan ${boletas} (meta: ${metaTotalBoletas} boletas)` : 'No alcanza ni con todo el aforo');
+    const detalleLine = (!cubierto && alcanzable) ? `<div class="equilibrio-box__detalle">${formatDetalle(detalle)}</div>` : '';
+
+    el.innerHTML = `
+      <p class="equilibrio-box__title">Punto de equilibrio — recuperar la inversión</p>
+      <div class="equilibrio-box__total">${formatCOP(egresosTotalesMedio)} <small style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);">egresos totales (escenario medio)</small></div>
+      <p class="equilibrio-box__colchon">Colchón: ${formatCOP(colchonMedio)}</p>
+      <div class="equilibrio-box__bar-track"><div class="equilibrio-box__bar-fill" style="width:${pct}%"></div></div>
+      <div class="equilibrio-box__status">
+        <span>${vendidasHoy} vendidas</span>
+        <strong>${statusRight}</strong>
+      </div>
+      ${detalleLine}`;
+  }
+  renderEquilibrioBox();
 
   function renderScenarios() {
     const grid = document.getElementById('scenario-grid');
-    const ingresoActual = boletasRevenue();
-    const vendidasHoy = totalBoletasVendidas();
 
-    grid.innerHTML = Object.entries(egresosPendientesEstimado).map(([key, pendiente]) => {
-      const egresosTotales = egresosConfirmados + pendiente;
-      const colchon = ingresosFijos - egresosTotales;
-      const meta = Math.max(egresosTotales - sponsorsFijos, 0);
-      const pct = meta === 0 ? 100 : Math.min((ingresoActual / meta) * 100, 100);
-      const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(meta);
-      const metaTotalBoletas = vendidasHoy + boletas;
-      const statusRight = cubierto
-        ? 'Meta cubierta'
-        : (alcanzable ? `Faltan ${boletas} (meta: ${metaTotalBoletas} boletas)` : 'No alcanza ni con todo el aforo');
-      const detalleLine = (!cubierto && alcanzable) ? `<div class="scenario-card__detalle">${formatDetalle(detalle)}</div>` : '';
-      const colchonLine = colchon === 0
-        ? `<div class="scenario-card__colchon">Sin ganancia ni pérdida — egresos totales = ingreso fijo exacto</div>`
-        : colchon > 0
-          ? `<div class="scenario-card__colchon">Colchón: ${formatCOP(colchon)}</div>`
-          : `<div class="scenario-card__colchon scenario-card__colchon--neg">Sin colchón — faltan ${formatCOP(-colchon)} del ingreso fijo</div>`;
-
-      // supuesto de venta: "bajo" usa su propio punto de equilibrio; medio/alto usan el % de aforo asignado
-      const nAsumido = key === 'bajo' ? metaTotalBoletas : Math.round(AFORO_TOTAL * ventaAsumidaPct[key]);
-      const supuestoLabel = key === 'bajo'
-        ? `En el punto de equilibrio (${nAsumido} boletas)`
-        : `Si se vende ${Math.round(ventaAsumidaPct[key] * 100)}% del aforo (${nAsumido} boletas)`;
-      const ingresosAsumidos = ingresosParaNBoletas(nAsumido);
-      const ganancia = Math.max(ingresosAsumidos - meta, 0);
-      const pagoMecanica = ingresosAsumidos * GARANTIA_BARRA_PCT;
+    grid.innerHTML = NIVELES_VENTA_PCT.map(pct => {
+      const n = Math.round(AFORO_TOTAL * pct);
+      const ingresos = ingresosParaNBoletas(n);
+      const ganancia = Math.max(ingresos - metaMedio, 0);
+      const pagoMecanica = ingresos * GARANTIA_BARRA_PCT;
 
       return `
-        <div class="scenario-card ${cubierto ? 'scenario-card--reached' : ''}">
-          <span class="scenario-card__label">${escenarioLabel[key]}</span>
-          <div class="scenario-card__total">${formatCOP(egresosTotales)} <small>egresos totales</small></div>
-          ${colchonLine}
-          <div class="scenario-card__bar-track"><div class="scenario-card__bar-fill" style="width:${pct}%"></div></div>
-          <div class="scenario-card__status">
-            <span>${vendidasHoy} vendidas</span>
-            <strong>${statusRight}</strong>
-          </div>
-          ${detalleLine}
-          <div class="scenario-card__team">
-            <p class="scenario-card__team-title">${supuestoLabel}</p>
-            <div class="scenario-card__team-row"><span>Ganancia para el equipo</span><strong>${formatCOP(ganancia)}</strong></div>
+        <div class="scenario-card">
+          <span class="scenario-card__label">${Math.round(pct * 100)}% del aforo</span>
+          <div class="scenario-card__total">${n} <small>boletas vendidas</small></div>
+          <div class="scenario-card__team" style="border-top:none; padding-top:0; margin-top:2px;">
+            <div class="scenario-card__team-row"><span>Ganancia total</span><strong>${formatCOP(ganancia)}</strong></div>
             <div class="scenario-card__team-row"><span>Pago a La Mecánica (20% barra)</span><strong class="scenario-card__team-row--warn">-${formatCOP(pagoMecanica)}</strong></div>
           </div>
         </div>`;
@@ -1239,7 +1253,6 @@
   // --- súper meta: 100% del aforo agotado ---
   function renderSuperMeta() {
     const el = document.getElementById('risk-box');
-    const metaMedio = Math.max((egresosConfirmados + egresosPendientesEstimado.medio) - sponsorsFijos, 0);
     const ingresosAforo = ingresosParaNBoletas(AFORO_TOTAL);
     const ganancia = Math.max(ingresosAforo - metaMedio, 0);
     const pagoMecanica = ingresosAforo * GARANTIA_BARRA_PCT;
