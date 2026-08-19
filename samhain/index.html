@@ -581,6 +581,8 @@
     color: var(--text);
   }
   table.budget tr.total td.amount { color: var(--lila-claro); }
+  table.budget td.colchon-label { color: var(--menta); font-style: italic; }
+  table.budget td.colchon-amount { color: var(--menta); }
 
   .pending-badge {
     display: inline-block;
@@ -976,7 +978,7 @@
   <div class="wrap">
     <p class="eyebrow">Transparencia</p>
     <h2 class="section-title">Presupuesto del evento</h2>
-    <p class="section-sub">Así se financia Samhain — de dónde sale la plata y en qué se va. Los ítems marcados "Estimado" todavía están en cotización — la cifra es un cálculo interno de planeación, no una cotización cerrada.</p>
+    <p class="section-sub">Así se financia Samhain — de dónde sale la plata y en qué se va. Los ítems marcados "Estimado" todavía están en cotización — la cifra es un cálculo interno de planeación, no una cotización cerrada. El colchón no es un gasto real, es margen de seguridad reservado dentro del presupuesto.</p>
 
     <div class="budget-grid">
       <div class="budget-card budget-card--ingresos">
@@ -998,14 +1000,15 @@
           <tr><td>Premio 1er lugar cosplay</td><td class="amount">$200.000</td></tr>
           <tr><td>Premio 2do lugar cosplay</td><td class="amount">$100.000</td></tr>
           <tr><td>Premio 3er lugar cosplay</td><td class="amount">$50.000</td></tr>
-          <tr><td>Manillas (200 unidades)</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Impresión tarjetas Küül</td><td class="amount">$50.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Decoración</td><td class="amount">$375.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Espacio / backdrop para fotos</td><td class="amount">$187.500 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Pauta publicitaria</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Pago a influencers</td><td class="amount">$100.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Manillas (200 unidades)</td><td class="amount">$121.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Impresión tarjetas Küül</td><td class="amount">$40.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Decoración</td><td class="amount">$305.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Espacio / backdrop para fotos</td><td class="amount">$152.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Pauta publicitaria</td><td class="amount">$121.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Pago a influencers</td><td class="amount">$81.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr class="total"><td>Egresos confirmados</td><td class="amount">$980.000</td></tr>
-          <tr class="total"><td>Egresos totales (con estimados)</td><td class="amount">$1.992.500</td></tr>
+          <tr><td class="colchon-label">Colchón / reserva</td><td class="amount colchon-amount">$200.000</td></tr>
+          <tr class="total"><td>Egresos totales</td><td class="amount">$2.000.000</td></tr>
         </table>
       </div>
     </div>
@@ -1022,11 +1025,11 @@
         <span class="budget-compare__amount">$980.000</span>
       </div>
       <div class="budget-compare__row">
-        <span class="budget-compare__label">Egresos totales (con estimados)</span>
-        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:99.6%"></span></span>
-        <span class="budget-compare__amount">$1.992.500</span>
+        <span class="budget-compare__label">Egresos totales (con colchón)</span>
+        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:100%"></span></span>
+        <span class="budget-compare__amount">$2.000.000</span>
       </div>
-      <p class="budget-note">El ingreso fijo ($2.000.000) casi alcanza a cubrir el total de egresos estimados — queda un colchón de apenas $7.500. Lo que sobra del ingreso fijo después de gastos es un colchón, no ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
+      <p class="budget-note">El ingreso fijo ($2.000.000) queda completamente asignado: egresos confirmados + estimados + un colchón de $200.000 de margen de seguridad. Ese colchón no es ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
     </div>
   </div>
 </section>
@@ -1118,7 +1121,7 @@
   const egresosConfirmados = 980000; // incluye $300.000 en premios de cosplay
   const egresosPendientesEstimado = {
     bajo: ingresosFijos - egresosConfirmados, // por definición: egresos totales = ingreso fijo exacto, punto de equilibrio
-    medio: 1012500, // manillas 150k + tarjetas 50k + decoración 375k + espacio 187.5k + pauta 150k + influencers 100k
+    medio: 820000, // manillas 121k + tarjetas 40k + decoración 305k + espacio 152k + pauta 121k + influencers 81k (bajados proporcionalmente para dejar colchón de 200k)
     alto: 1800000,
   };
   const escenarioLabel = { bajo: 'Escenario bajo — equilibrio', medio: 'Escenario medio', alto: 'Escenario alto' };
