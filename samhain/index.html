@@ -752,6 +752,47 @@
     font-size: 15px;
   }
 
+  .risk-box {
+    margin-top: 24px;
+    background: var(--surface);
+    border: 1.5px dashed var(--rosa-fuerte);
+    border-radius: 20px;
+    padding: 24px 26px;
+  }
+  .risk-box__title {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rosa-fuerte);
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  .risk-box__text {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin: 0 0 16px;
+    max-width: 68ch;
+  }
+  .risk-box__rows {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .risk-box__row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .risk-box__row span {
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .risk-box__row strong {
+    font-size: 17px;
+    color: var(--rosa-fuerte);
+    font-variant-numeric: tabular-nums;
+  }
+
   /* ---------- sponsors ---------- */
   .sponsor-strip {
     display: flex;
@@ -994,6 +1035,8 @@
 
     <div class="scenario-grid" id="scenario-grid"><!-- filled by JS --></div>
     <p class="budget-note">El colchón sale de restar los egresos totales al ingreso fijo ($2.000.000) — es la plata que ya está en mano antes de vender una sola boleta, pero incluye devolver tu inversión, así que no es ganancia todavía. El ingreso para el equipo solo empieza a contar boletería después de eso. Todo se recalcula solo según cuánto llevas vendido.</p>
+
+    <div class="risk-box" id="risk-box"><!-- filled by JS --></div>
   </div>
 </section>
 
@@ -1176,6 +1219,26 @@
     }).join('');
   }
   renderScenarios();
+
+  // --- riesgo: garantía de consumo mínimo en barra ---
+  const GARANTIA_BARRA_PCT = 0.20; // % de la boletería que Aquelarre debe cubrir si no se llega al mínimo de consumo que pide La Mecánica
+
+  function renderRiesgoBarra() {
+    const el = document.getElementById('risk-box');
+    const hoy = boletasRevenue();
+    const a150 = ingresosParaNBoletas(SUPER_META_PERSONAS);
+    const aforo = ingresosParaNBoletas(AFORO_TOTAL);
+
+    el.innerHTML = `
+      <p class="risk-box__title">Riesgo — garantía de barra</p>
+      <p class="risk-box__text">La Mecánica pide un consumo mínimo en barra. Si el grupo no llega a ese mínimo, Aquelarre tiene que cubrir la diferencia: el 20% de lo vendido en boletería. Esto se resta del ingreso para el equipo antes de repartir — no está descontado en los números de arriba.</p>
+      <div class="risk-box__rows">
+        <div class="risk-box__row"><span>Con lo vendido hoy</span><strong>-${formatCOP(hoy * GARANTIA_BARRA_PCT)}</strong></div>
+        <div class="risk-box__row"><span>Si vendemos 150 boletas</span><strong>-${formatCOP(a150 * GARANTIA_BARRA_PCT)}</strong></div>
+        <div class="risk-box__row"><span>Si se agotan las ${AFORO_TOTAL} boletas</span><strong>-${formatCOP(aforo * GARANTIA_BARRA_PCT)}</strong></div>
+      </div>`;
+  }
+  renderRiesgoBarra();
 
   // --- countdown ---
   function tickCountdown() {
