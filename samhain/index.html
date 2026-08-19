@@ -952,13 +952,13 @@
           <tr><td>Premio 2do lugar cosplay</td><td class="amount">$100.000</td></tr>
           <tr><td>Premio 3er lugar cosplay</td><td class="amount">$50.000</td></tr>
           <tr><td>Manillas (200 unidades)</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Impresión tarjetas Küül</td><td class="amount">$112.500 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Impresión tarjetas Küül</td><td class="amount">$50.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr><td>Decoración</td><td class="amount">$375.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr><td>Espacio / backdrop para fotos</td><td class="amount">$187.500 <span class="pending-badge">Estimado</span></td></tr>
           <tr><td>Pauta publicitaria</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Pago a influencers</td><td class="amount">$225.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Pago a influencers</td><td class="amount">$100.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr class="total"><td>Egresos confirmados</td><td class="amount">$980.000</td></tr>
-          <tr class="total"><td>Egresos totales (con estimados)</td><td class="amount">$2.180.000</td></tr>
+          <tr class="total"><td>Egresos totales (con estimados)</td><td class="amount">$1.992.500</td></tr>
         </table>
       </div>
     </div>
@@ -976,10 +976,10 @@
       </div>
       <div class="budget-compare__row">
         <span class="budget-compare__label">Egresos totales (con estimados)</span>
-        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--danger" style="width:100%"></span></span>
-        <span class="budget-compare__amount">$2.180.000</span>
+        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:99.6%"></span></span>
+        <span class="budget-compare__amount">$1.992.500</span>
       </div>
-      <p class="budget-note">El ingreso fijo ($2.000.000) ya no alcanza a cubrir el total de egresos una vez sumados los estimados — faltan $180.000, y esos tienen que salir de boletería. Lo que sobra del ingreso fijo después de gastos es un colchón, no ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
+      <p class="budget-note">El ingreso fijo ($2.000.000) casi alcanza a cubrir el total de egresos estimados — queda un colchón de apenas $7.500. Lo que sobra del ingreso fijo después de gastos es un colchón, no ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
     </div>
   </div>
 </section>
@@ -1067,8 +1067,12 @@
   const ingresosFijos = 2000000; // patrocinios + inversión propia
   const sponsorsFijos = 1200000; // Maruchan + Küül, sin contar la inversión propia
   const egresosConfirmados = 980000; // incluye $300.000 en premios de cosplay
-  const egresosPendientesEstimado = { bajo: 675000, medio: 1200000, alto: 1800000 };
-  const escenarioLabel = { bajo: 'Escenario bajo', medio: 'Escenario medio', alto: 'Escenario alto' };
+  const egresosPendientesEstimado = {
+    bajo: ingresosFijos - egresosConfirmados, // por definición: egresos totales = ingreso fijo exacto, punto de equilibrio
+    medio: 1012500, // manillas 150k + tarjetas 50k + decoración 375k + espacio 187.5k + pauta 150k + influencers 100k
+    alto: 1800000,
+  };
+  const escenarioLabel = { bajo: 'Escenario bajo — equilibrio', medio: 'Escenario medio', alto: 'Escenario alto' };
 
   function boletasRevenue() {
     return tiers.reduce((sum, t) => sum + boletasVendidas[t.key] * t.price, 0);
@@ -1144,9 +1148,11 @@
         ? 'Meta cubierta'
         : (alcanzable ? `Faltan ${boletas} (meta: ${metaTotalBoletas} boletas)` : 'No alcanza ni con todo el aforo');
       const detalleLine = (!cubierto && alcanzable) ? `<div class="scenario-card__detalle">${formatDetalle(detalle)}</div>` : '';
-      const colchonLine = colchon >= 0
-        ? `<div class="scenario-card__colchon">Colchón: ${formatCOP(colchon)}</div>`
-        : `<div class="scenario-card__colchon scenario-card__colchon--neg">Sin colchón — faltan ${formatCOP(-colchon)} del ingreso fijo</div>`;
+      const colchonLine = colchon === 0
+        ? `<div class="scenario-card__colchon">Sin ganancia ni pérdida — egresos totales = ingreso fijo exacto</div>`
+        : colchon > 0
+          ? `<div class="scenario-card__colchon">Colchón: ${formatCOP(colchon)}</div>`
+          : `<div class="scenario-card__colchon scenario-card__colchon--neg">Sin colchón — faltan ${formatCOP(-colchon)} del ingreso fijo</div>`;
       const equipoA150 = Math.max(ingresosA150 - meta, 0);
       const equipoAforo = Math.max(ingresosAforoCompleto - meta, 0);
 
