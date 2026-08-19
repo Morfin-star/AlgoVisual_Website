@@ -626,6 +626,7 @@
   }
   .budget-compare__fill--in { background-image: var(--holo); background-size: 260% 100%; }
   .budget-compare__fill--out { background: var(--malva); }
+  .budget-compare__fill--danger { background: var(--rosa-fuerte); }
   .budget-compare__amount {
     font-size: 14px;
     font-weight: 600;
@@ -714,65 +715,33 @@
     font-size: 12px;
     color: var(--text-faint);
   }
-
-  .super-meta {
-    margin-top: 24px;
-    background: var(--surface);
-    border: 1.5px solid var(--purpura);
-    border-radius: 20px;
-    padding: 28px 26px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 20px;
+  .scenario-card__colchon {
+    font-size: 12.5px;
+    color: var(--menta);
+    font-variant-numeric: tabular-nums;
   }
-  @media (max-width: 640px) {
-    .super-meta { grid-template-columns: 1fr; text-align: center; }
-  }
-  .super-meta__label {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .scenario-card__colchon--neg {
     color: var(--rosa-fuerte);
-    font-weight: 700;
-    margin: 0 0 6px;
   }
-  .super-meta__headline {
-    font-family: 'Rebork', cursive;
-    font-size: 24px;
-    color: var(--text);
-    margin: 0 0 6px;
-    line-height: 1.2;
+  .scenario-card__team {
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--ring);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-  .super-meta__note {
+  .scenario-card__team-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
     font-size: 13px;
     color: var(--text-dim);
-    margin: 0;
-  }
-  .super-meta__stat {
-    text-align: center;
-    padding: 14px 22px;
-    border-radius: 16px;
-    background: var(--surface-2);
-    border: 1px solid var(--ring);
-  }
-  .super-meta__stat-amount {
-    font-family: 'Rebork', cursive;
-    font-size: 30px;
-    background-image: var(--holo);
-    background-size: 260% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
     font-variant-numeric: tabular-nums;
-    line-height: 1;
   }
-  .super-meta__stat-label {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    margin-top: 6px;
+  .scenario-card__team-row strong {
+    color: var(--text);
+    font-weight: 700;
   }
 
   /* ---------- sponsors ---------- */
@@ -952,7 +921,7 @@
   <div class="wrap">
     <p class="eyebrow">Transparencia</p>
     <h2 class="section-title">Presupuesto del evento</h2>
-    <p class="section-sub">Así se financia Samhain — de dónde sale la plata y en qué se va. Los ítems marcados "por definir" están en cotización, sin cifra inventada.</p>
+    <p class="section-sub">Así se financia Samhain — de dónde sale la plata y en qué se va. Los ítems marcados "Estimado" todavía están en cotización — la cifra es un cálculo interno de planeación, no una cotización cerrada.</p>
 
     <div class="budget-grid">
       <div class="budget-card budget-card--ingresos">
@@ -974,13 +943,14 @@
           <tr><td>Premio 1er lugar cosplay</td><td class="amount">$200.000</td></tr>
           <tr><td>Premio 2do lugar cosplay</td><td class="amount">$100.000</td></tr>
           <tr><td>Premio 3er lugar cosplay</td><td class="amount">$50.000</td></tr>
-          <tr><td>Manillas (200 unidades)</td><td class="amount"><span class="pending-badge">Por definir</span></td></tr>
-          <tr><td>Impresión tarjetas Küül</td><td class="amount"><span class="pending-badge">Por definir</span></td></tr>
-          <tr><td>Decoración</td><td class="amount"><span class="pending-badge">Por definir</span></td></tr>
-          <tr><td>Espacio / backdrop para fotos</td><td class="amount"><span class="pending-badge">Por definir</span></td></tr>
-          <tr><td>Pauta publicitaria</td><td class="amount"><span class="pending-badge">Por definir</span></td></tr>
-          <tr><td>Pago a influencers</td><td class="amount"><span class="pending-badge">Por definir</span></td></tr>
+          <tr><td>Manillas (200 unidades)</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Impresión tarjetas Küül</td><td class="amount">$112.500 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Decoración</td><td class="amount">$375.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Espacio / backdrop para fotos</td><td class="amount">$187.500 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Pauta publicitaria</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
+          <tr><td>Pago a influencers</td><td class="amount">$225.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr class="total"><td>Egresos confirmados</td><td class="amount">$980.000</td></tr>
+          <tr class="total"><td>Egresos totales (con estimados)</td><td class="amount">$2.180.000</td></tr>
         </table>
       </div>
     </div>
@@ -996,7 +966,12 @@
         <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:49%"></span></span>
         <span class="budget-compare__amount">$980.000</span>
       </div>
-      <p class="budget-note">Quedan $1.020.000 antes de sumar los ítems "por definir" — manillas, impresión, decoración, espacio de fotos, pauta e influencers. Esta barra se actualizará cuando esas cifras se cierren.</p>
+      <div class="budget-compare__row">
+        <span class="budget-compare__label">Egresos totales (con estimados)</span>
+        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--danger" style="width:100%"></span></span>
+        <span class="budget-compare__amount">$2.180.000</span>
+      </div>
+      <p class="budget-note">El ingreso fijo ($2.000.000) ya no alcanza a cubrir el total de egresos una vez sumados los estimados — faltan $180.000, y esos tienen que salir de boletería. Lo que sobra del ingreso fijo después de gastos es un colchón, no ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
     </div>
   </div>
 </section>
@@ -1007,25 +982,10 @@
   <div class="wrap">
     <p class="eyebrow">Meta</p>
     <h2 class="section-title">Recuperar la inversión</h2>
-    <p class="section-sub">Los patrocinios ($1.200.000) ya cubren los gastos confirmados. Para que Aquelarre recupere completo lo que puso de su bolsillo ($800.000), patrocinios + boletería tienen que alcanzar a cubrir el total de gastos — incluyendo los que siguen en cotización.</p>
-
-    <div class="budget-card" style="margin-bottom: 28px;">
-      <h3>Egresos pendientes — estimado interno, no cotizaciones cerradas</h3>
-      <table class="budget">
-        <tr><td>Manillas (200 uds)</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-        <tr><td>Impresión tarjetas Küül</td><td class="amount">$112.500 <span class="pending-badge">Estimado</span></td></tr>
-        <tr><td>Decoración</td><td class="amount">$375.000 <span class="pending-badge">Estimado</span></td></tr>
-        <tr><td>Espacio / backdrop para fotos</td><td class="amount">$187.500 <span class="pending-badge">Estimado</span></td></tr>
-        <tr><td>Pauta publicitaria</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-        <tr><td>Pago a influencers</td><td class="amount">$225.000 <span class="pending-badge">Estimado</span></td></tr>
-        <tr class="total"><td>Subtotal estimado</td><td class="amount">$1.200.000</td></tr>
-      </table>
-    </div>
+    <p class="section-sub">Detalle de egresos (confirmados + estimados) más arriba, en "Presupuesto del evento". Acá: para cada escenario de gasto, el colchón que deja el ingreso fijo, cuántas boletas faltan para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000), y cuánto quedaría para repartir entre el equipo si llegamos a 150 boletas (súper meta) o agotamos el aforo (200).</p>
 
     <div class="scenario-grid" id="scenario-grid"><!-- filled by JS --></div>
-    <p class="budget-note">Los tres escenarios asumen que los $1.200.000 de patrocinios no incluyen tu inversión propia — esa se recupera aparte, con boletería. Las barras se actualizan solas según cuánto llevas vendido.</p>
-
-    <div class="super-meta" id="super-meta"><!-- filled by JS --></div>
+    <p class="budget-note">El colchón sale de restar los egresos totales al ingreso fijo ($2.000.000) — es la plata que ya está en mano antes de vender una sola boleta, pero incluye devolver tu inversión, así que no es ganancia todavía. El ingreso para el equipo solo empieza a contar boletería después de eso. Todo se recalcula solo según cuánto llevas vendido.</p>
   </div>
 </section>
 
@@ -1096,6 +1056,7 @@
   renderTickets();
 
   // --- meta: recuperar la inversión ---
+  const ingresosFijos = 2000000; // patrocinios + inversión propia
   const sponsorsFijos = 1200000; // Maruchan + Küül, sin contar la inversión propia
   const egresosConfirmados = 980000; // incluye $300.000 en premios de cosplay
   const egresosPendientesEstimado = { bajo: 675000, medio: 1200000, alto: 1800000 };
@@ -1141,36 +1102,7 @@
     return tiers.reduce((sum, t) => sum + boletasVendidas[t.key], 0);
   }
 
-  function renderScenarios() {
-    const grid = document.getElementById('scenario-grid');
-    const ingresoActual = boletasRevenue();
-    const vendidasHoy = totalBoletasVendidas();
-    grid.innerHTML = Object.entries(egresosPendientesEstimado).map(([key, pendiente]) => {
-      const egresosTotales = egresosConfirmados + pendiente;
-      const meta = Math.max(egresosTotales - sponsorsFijos, 0);
-      const pct = meta === 0 ? 100 : Math.min((ingresoActual / meta) * 100, 100);
-      const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(meta);
-      const metaTotalBoletas = vendidasHoy + boletas;
-      const statusRight = cubierto
-        ? 'Meta cubierta'
-        : (alcanzable ? `Faltan ${boletas} (meta: ${metaTotalBoletas} boletas)` : 'No alcanza ni con todo el aforo');
-      const detalleLine = (!cubierto && alcanzable) ? `<div class="scenario-card__detalle">${formatDetalle(detalle)}</div>` : '';
-      return `
-        <div class="scenario-card ${cubierto ? 'scenario-card--reached' : ''}">
-          <span class="scenario-card__label">${escenarioLabel[key]}</span>
-          <div class="scenario-card__total">${formatCOP(egresosTotales)} <small>egresos totales</small></div>
-          <div class="scenario-card__bar-track"><div class="scenario-card__bar-fill" style="width:${pct}%"></div></div>
-          <div class="scenario-card__status">
-            <span>${vendidasHoy} vendidas</span>
-            <strong>${statusRight}</strong>
-          </div>
-          ${detalleLine}
-        </div>`;
-    }).join('');
-  }
-  renderScenarios();
-
-  // --- súper meta: 150 personas, ingreso proyectado para el equipo ---
+  const AFORO_TOTAL = tiers.reduce((sum, t) => sum + cupoPorEtapa[t.key], 0);
   const SUPER_META_PERSONAS = 150;
 
   function ingresosParaNBoletas(n) {
@@ -1186,42 +1118,49 @@
     return total;
   }
 
-  function detalleParaCantidadTotal(nObjetivoTotal) {
-    let faltan = Math.max(nObjetivoTotal - totalBoletasVendidas(), 0);
-    const detalle = {};
-    for (const t of tiers) {
-      if (faltan <= 0) break;
-      const stockRestante = cupoPorEtapa[t.key] - boletasVendidas[t.key];
-      const usar = Math.min(faltan, stockRestante);
-      if (usar > 0) detalle[t.key] = usar;
-      faltan -= usar;
-    }
-    return detalle;
-  }
-
-  function renderSuperMeta() {
-    const el = document.getElementById('super-meta');
+  function renderScenarios() {
+    const grid = document.getElementById('scenario-grid');
+    const ingresoActual = boletasRevenue();
     const vendidasHoy = totalBoletasVendidas();
-    const faltan = Math.max(SUPER_META_PERSONAS - vendidasHoy, 0);
-    const ingresosAlSuperMeta = ingresosParaNBoletas(SUPER_META_PERSONAS);
-    const metaMedio = Math.max((egresosConfirmados + egresosPendientesEstimado.medio) - sponsorsFijos, 0);
-    const ingresoEquipo = Math.max(ingresosAlSuperMeta - metaMedio, 0);
-    const detalle = detalleParaCantidadTotal(SUPER_META_PERSONAS);
-    const detalleLine = faltan > 0 ? `<p class="super-meta__note" style="margin-top:4px;">${formatDetalle(detalle)}</p>` : '';
+    const ingresosA150 = ingresosParaNBoletas(SUPER_META_PERSONAS);
+    const ingresosAforoCompleto = ingresosParaNBoletas(AFORO_TOTAL);
 
-    el.innerHTML = `
-      <div>
-        <p class="super-meta__label">Súper meta</p>
-        <p class="super-meta__headline">${SUPER_META_PERSONAS} personas${faltan > 0 ? ` — faltan ${faltan} boletas` : ' — ¡ya la alcanzamos!'}</p>
-        <p class="super-meta__note">Con el escenario medio de egresos, esto es lo que quedaría disponible para repartir entre el equipo organizador una vez cubiertos los gastos y devuelta la inversión.</p>
-        ${detalleLine}
-      </div>
-      <div class="super-meta__stat">
-        <div class="super-meta__stat-amount">${formatCOP(ingresoEquipo)}</div>
-        <div class="super-meta__stat-label">Ingreso para el equipo</div>
-      </div>`;
+    grid.innerHTML = Object.entries(egresosPendientesEstimado).map(([key, pendiente]) => {
+      const egresosTotales = egresosConfirmados + pendiente;
+      const colchon = ingresosFijos - egresosTotales;
+      const meta = Math.max(egresosTotales - sponsorsFijos, 0);
+      const pct = meta === 0 ? 100 : Math.min((ingresoActual / meta) * 100, 100);
+      const { boletas, cubierto, alcanzable, detalle } = boletasFaltantesPara(meta);
+      const metaTotalBoletas = vendidasHoy + boletas;
+      const statusRight = cubierto
+        ? 'Meta cubierta'
+        : (alcanzable ? `Faltan ${boletas} (meta: ${metaTotalBoletas} boletas)` : 'No alcanza ni con todo el aforo');
+      const detalleLine = (!cubierto && alcanzable) ? `<div class="scenario-card__detalle">${formatDetalle(detalle)}</div>` : '';
+      const colchonLine = colchon >= 0
+        ? `<div class="scenario-card__colchon">Colchón: ${formatCOP(colchon)}</div>`
+        : `<div class="scenario-card__colchon scenario-card__colchon--neg">Sin colchón — faltan ${formatCOP(-colchon)} del ingreso fijo</div>`;
+      const equipoA150 = Math.max(ingresosA150 - meta, 0);
+      const equipoAforo = Math.max(ingresosAforoCompleto - meta, 0);
+
+      return `
+        <div class="scenario-card ${cubierto ? 'scenario-card--reached' : ''}">
+          <span class="scenario-card__label">${escenarioLabel[key]}</span>
+          <div class="scenario-card__total">${formatCOP(egresosTotales)} <small>egresos totales</small></div>
+          ${colchonLine}
+          <div class="scenario-card__bar-track"><div class="scenario-card__bar-fill" style="width:${pct}%"></div></div>
+          <div class="scenario-card__status">
+            <span>${vendidasHoy} vendidas</span>
+            <strong>${statusRight}</strong>
+          </div>
+          ${detalleLine}
+          <div class="scenario-card__team">
+            <div class="scenario-card__team-row"><span>A 150 boletas</span><strong>${formatCOP(equipoA150)}</strong></div>
+            <div class="scenario-card__team-row"><span>Aforo completo (${AFORO_TOTAL})</span><strong>${formatCOP(equipoAforo)}</strong></div>
+          </div>
+        </div>`;
+    }).join('');
   }
-  renderSuperMeta();
+  renderScenarios();
 
   // --- countdown ---
   function tickCountdown() {
