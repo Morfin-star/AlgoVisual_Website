@@ -990,7 +990,6 @@
   });
 
   var fullscreenBtn = document.getElementById("fullscreenBtn");
-  var fsLabel = fullscreenBtn.querySelector("span");
   fullscreenBtn.addEventListener("click", function(){
     try{
       if(!document.fullscreenElement){
@@ -1001,7 +1000,7 @@
     }catch(e){ /* Fullscreen API blocked by the host — nothing to fall back to */ }
   });
   document.addEventListener("fullscreenchange", function(){
-    fsLabel.textContent = document.fullscreenElement ? "Salir de pantalla completa" : "Pantalla completa";
+    fullscreenBtn.style.display = document.fullscreenElement ? "none" : "flex";
   });
 
   renderAll();
