@@ -359,16 +359,7 @@
     margin-left:6px;
   }
 
-  /* ---------- Bracket ---------- */
-  .bracket{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-bottom:20px;
-  }
-  @media (max-width:720px){
-    .bracket{ grid-template-columns:1fr; }
-  }
+  /* ---------- Final ---------- */
   .sf-card{
     background:var(--surface);
     border:1px solid var(--border);
@@ -416,6 +407,27 @@
     color:var(--gold);
   }
   .team-btn.lose{ opacity:0.5; }
+  .team-btn.static{ cursor:default; }
+  .team-btn.static:hover{ border-color:var(--border); }
+
+  .finalists-preview{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  @media (max-width:520px){
+    .finalists-preview{ grid-template-columns:1fr; }
+  }
+  .finalist-label{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:9.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:6px;
+  }
 
   .final-card{
     background:linear-gradient(180deg, var(--surface) 0%, var(--surface) 100%);
@@ -505,12 +517,39 @@
     color:#e08a8a;
   }
 
+  .fullscreen-btn{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:0.05em;
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:border-color 120ms ease, color 120ms ease;
+  }
+  .fullscreen-btn:hover{ border-color:var(--hex); color:var(--text); }
+  .fullscreen-btn svg{ width:14px; height:14px; flex:none; }
+
   @media (prefers-reduced-motion: reduce){
     *{ transition:none !important; }
   }
 </style>
 </head>
 <body>
+<button class="fullscreen-btn" id="fullscreenBtn" type="button">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  <span>Pantalla completa</span>
+</button>
+
 <div class="wrap">
 
   <header class="hero">
@@ -541,14 +580,8 @@
   </section>
 
   <section class="block">
-    <div class="section-head"><span class="num">02</span><h2>Semifinales</h2></div>
-    <p class="section-note" id="semis-note">Best of 1.</p>
-    <div class="bracket" id="semis"></div>
-  </section>
-
-  <section class="block">
-    <div class="section-head"><span class="num">03</span><h2>Gran final</h2></div>
-    <p class="section-note">Best of 3 &middot; se habilita cuando ambas semifinales tienen ganadora.</p>
+    <div class="section-head"><span class="num">02</span><h2>Gran final</h2></div>
+    <p class="section-note" id="final-note">Best of 3.</p>
     <div id="final"></div>
     <div id="champion"></div>
   </section>
@@ -563,7 +596,7 @@
 (function(){
   "use strict";
 
-  var STORAGE_KEY = "duo-arcano-bracket-v3";
+  var STORAGE_KEY = "duo-arcano-bracket-v4";
   var MIN_SIZE = 2;
   var MAX_SIZE = 8;
   var SOLO_MIN_SIZE = 4;
@@ -589,7 +622,6 @@
     return {
       mode:"groups",
       groups:{ A:defaultGroup(4), B:defaultGroup(4), SOLO:defaultGroup(8) },
-      semis:{ sf1:null, sf2:null },
       final:{ games:[null,null,null] }
     };
   }
@@ -608,7 +640,6 @@
           B: Object.assign(defaultGroup(4), parsed.groups && parsed.groups.B),
           SOLO: Object.assign(defaultGroup(8), parsed.groups && parsed.groups.SOLO)
         },
-        semis: Object.assign({sf1:null, sf2:null}, parsed.semis),
         final: Object.assign({games:[null,null,null]}, parsed.final)
       };
     }catch(e){
@@ -676,11 +707,10 @@
 
   function minSizeFor(group){ return group==="SOLO" ? SOLO_MIN_SIZE : MIN_SIZE; }
   function maxSizeFor(group){ return MAX_SIZE; }
-  function qualifyCount(group){ return group==="SOLO" ? 4 : 2; }
+  function qualifyCount(group){ return group==="SOLO" ? 2 : 1; }
 
   window.setMode = function(mode){
     state.mode = mode;
-    state.semis = { sf1:null, sf2:null };
     state.final = { games:[null,null,null] };
     saveState();
     renderAll();
@@ -691,7 +721,6 @@
     saveState();
     renderGroupHead(group);
     renderGroupBody(group);
-    renderSemis();
     renderFinal();
     updateFactTotal();
   };
@@ -713,7 +742,6 @@
     }
     saveState();
     renderGroupShell(group);
-    renderSemis();
     renderFinal();
     updateFactTotal();
   };
@@ -725,17 +753,6 @@
     saveState();
     renderGroupHead(group);
     renderGroupBody(group);
-    renderSemis();
-    renderFinal();
-  };
-
-  window.setSemiWinner = function(sf, side){
-    state.semis[sf] = (state.semis[sf] === side) ? null : side;
-    if(state.semis.sf1 === null || state.semis.sf2 === null){
-      state.final.games = [null,null,null];
-    }
-    saveState();
-    renderSemis();
     renderFinal();
   };
 
@@ -851,85 +868,45 @@
 
     var note = document.getElementById("groups-note");
     note.textContent = state.mode === "solo"
-      ? "Un solo round robin con todas las parejas · clasifican las 4 primeras a semifinales. Empates se resuelven manualmente."
-      : "Round robin por grupo · clasifican las 2 primeras de cada grupo. Empates se resuelven manualmente.";
+      ? "Un solo round robin con todas las parejas · las 2 primeras van directo a la gran final. Empates se resuelven manualmente."
+      : "Round robin por grupo · la ganadora de cada grupo va directo a la gran final. Empates se resuelven manualmente.";
 
-    var semisNote = document.getElementById("semis-note");
-    semisNote.textContent = state.mode === "solo"
-      ? "Best of 1 · se habilita cuando termina la fase de todas contra todas."
-      : "Best of 1 · se habilita cuando ambos grupos terminan.";
+    var finalNote = document.getElementById("final-note");
+    finalNote.textContent = state.mode === "solo"
+      ? "Best of 3 · se habilita cuando termina la fase de todas contra todas."
+      : "Best of 3 · se habilita cuando ambos grupos terminan.";
   }
 
-  function semisReady(){
+  function finalReady(){
     return state.mode === "solo" ? groupComplete("SOLO") : (groupComplete("A") && groupComplete("B"));
   }
 
-  function semisPairs(){
+  function finalistsInfo(){
+    if(!finalReady()) return null;
     if(state.mode === "solo"){
       var s = standings("SOLO");
       return {
-        sf1: { first:{name:s[0].name}, second:{name:s[3].name} },
-        sf2: { first:{name:s[1].name}, second:{name:s[2].name} }
+        first: { label:"1&ordm; clasificada", name:s[0].name },
+        second: { label:"2&ordm; clasificada", name:s[1].name }
       };
     }
     var sa = standings("A"), sb = standings("B");
     return {
-      sf1: { first:{name:sa[0].name}, second:{name:sb[1].name} },
-      sf2: { first:{name:sb[0].name}, second:{name:sa[1].name} }
+      first: { label:"Ganadora Grupo A", name:sa[0].name },
+      second: { label:"Ganadora Grupo B", name:sb[0].name }
     };
-  }
-
-  function renderSemis(){
-    var el = document.getElementById("semis");
-
-    if(!semisReady()){
-      if(state.mode === "solo"){
-        el.innerHTML =
-          '<div class="sf-card locked">Pendiente&mdash;<br>' + decidedCount("SOLO") + '/' + totalMatches("SOLO") + ' partidas jugadas</div>' +
-          '<div class="sf-card locked">Se habilita cuando<br>termine la fase de todas contra todas</div>';
-      }else{
-        el.innerHTML =
-          '<div class="sf-card locked">Pendiente&mdash;<br>Grupo A: ' + decidedCount("A") + '/' + totalMatches("A") + ' &middot; Grupo B: ' + decidedCount("B") + '/' + totalMatches("B") + '</div>' +
-          '<div class="sf-card locked">Se habilita cuando<br>ambos grupos terminen</div>';
-      }
-      return;
-    }
-
-    var pairs = semisPairs();
-    var labels = state.mode === "solo"
-      ? { sf1:"Semifinal 1 &middot; 1&ordm; vs 4&ordm;", sf2:"Semifinal 2 &middot; 2&ordm; vs 3&ordm;" }
-      : { sf1:"Semifinal 1 &middot; A1 vs B2", sf2:"Semifinal 2 &middot; B1 vs A2" };
-
-    var html = "";
-    ["sf1","sf2"].forEach(function(sf){
-      var winner = state.semis[sf];
-      var p = pairs[sf];
-      html += '<div class="sf-card">';
-      html += '<p class="sf-label">' + labels[sf] + '</p>';
-      html += '<div class="sf-teams">';
-      html += '<button class="team-btn ' + (winner==="first"?"win":winner==="second"?"lose":"") + '" onclick="setSemiWinner(\'' + sf + '\',\'first\')">' + escapeHtml(p.first.name) + '</button>';
-      html += '<button class="team-btn ' + (winner==="second"?"win":winner==="first"?"lose":"") + '" onclick="setSemiWinner(\'' + sf + '\',\'second\')">' + escapeHtml(p.second.name) + '</button>';
-      html += '</div></div>';
-    });
-    el.innerHTML = html;
-  }
-
-  function finalistNames(){
-    if(!semisReady()) return null;
-    var pairs = semisPairs();
-    var sf1Winner = state.semis.sf1 === "first" ? pairs.sf1.first.name : (state.semis.sf1 === "second" ? pairs.sf1.second.name : null);
-    var sf2Winner = state.semis.sf2 === "first" ? pairs.sf2.first.name : (state.semis.sf2 === "second" ? pairs.sf2.second.name : null);
-    if(!sf1Winner || !sf2Winner) return null;
-    return { first:sf1Winner, second:sf2Winner };
   }
 
   function renderFinal(){
     var el = document.getElementById("final");
     var champEl = document.getElementById("champion");
-    var finalists = finalistNames();
+    var finalists = finalistsInfo();
 
     if(!finalists){
-      el.innerHTML = '<div class="sf-card locked">La final se habilita cuando ambas semifinales tengan ganadora.</div>';
+      var pending = state.mode === "solo"
+        ? (decidedCount("SOLO") + '/' + totalMatches("SOLO") + ' partidas jugadas')
+        : ('Grupo A: ' + decidedCount("A") + '/' + totalMatches("A") + ' &middot; Grupo B: ' + decidedCount("B") + '/' + totalMatches("B"));
+      el.innerHTML = '<div class="sf-card locked">La final se habilita cuando termine la fase de grupos.<br>' + pending + '</div>';
       champEl.innerHTML = "";
       return;
     }
@@ -941,14 +918,18 @@
 
     var html = '<div class="final-card">';
     html += '<div class="final-head"><p class="sf-label">Gran final &middot; Best of 3</p><span class="final-score">' + aWins + ' &ndash; ' + bWins + '</span></div>';
+    html += '<div class="finalists-preview">';
+    html += '<div class="team-btn static"><span class="finalist-label">' + finalists.first.label + '</span>' + escapeHtml(finalists.first.name) + '</div>';
+    html += '<div class="team-btn static"><span class="finalist-label">' + finalists.second.label + '</span>' + escapeHtml(finalists.second.name) + '</div>';
+    html += '</div>';
     html += '<div class="games">';
     for(var i=0;i<3;i++){
       var g = games[i];
       var locked = (champSide !== null && g === null);
       html += '<div class="game-row' + (locked ? ' disabled' : '') + '">';
-      html += '<button class="match-btn ' + (g==="first"?"win":g==="second"?"lose":"") + '" onclick="setFinalGame(' + i + ',\'first\')">' + escapeHtml(finalists.first) + '</button>';
+      html += '<button class="match-btn ' + (g==="first"?"win":g==="second"?"lose":"") + '" onclick="setFinalGame(' + i + ',\'first\')">' + escapeHtml(finalists.first.name) + '</button>';
       html += '<span class="match-vs">P' + (i+1) + '</span>';
-      html += '<button class="match-btn ' + (g==="second"?"win":g==="first"?"lose":"") + '" onclick="setFinalGame(' + i + ',\'second\')">' + escapeHtml(finalists.second) + '</button>';
+      html += '<button class="match-btn ' + (g==="second"?"win":g==="first"?"lose":"") + '" onclick="setFinalGame(' + i + ',\'second\')">' + escapeHtml(finalists.second.name) + '</button>';
       html += '</div>';
     }
     html += '</div>';
@@ -959,7 +940,7 @@
     el.innerHTML = html;
 
     if(champSide){
-      var champName = champSide==="first" ? finalists.first : finalists.second;
+      var champName = champSide==="first" ? finalists.first.name : finalists.second.name;
       champEl.innerHTML =
         '<div class="champion">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="color:var(--gold)"><path d="M8 21h8M12 17v4M6 4h12v3a6 6 0 0 1-12 0V4Z"/><path d="M6 5H3.5A1.5 1.5 0 0 0 2 6.5v1A3.5 3.5 0 0 0 5.5 11H6M18 5h2.5A1.5 1.5 0 0 1 22 6.5v1A3.5 3.5 0 0 1 18.5 11H18"/></svg>' +
@@ -980,7 +961,6 @@
   function renderAll(){
     renderModeToggle();
     renderGroupsContainer();
-    renderSemis();
     renderFinal();
     updateFactTotal();
   }
@@ -1007,6 +987,21 @@
     state = defaultState();
     saveState();
     renderAll();
+  });
+
+  var fullscreenBtn = document.getElementById("fullscreenBtn");
+  var fsLabel = fullscreenBtn.querySelector("span");
+  fullscreenBtn.addEventListener("click", function(){
+    try{
+      if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen();
+      }else{
+        document.exitFullscreen();
+      }
+    }catch(e){ /* Fullscreen API blocked by the host — nothing to fall back to */ }
+  });
+  document.addEventListener("fullscreenchange", function(){
+    fsLabel.textContent = document.fullscreenElement ? "Salir de pantalla completa" : "Pantalla completa";
   });
 
   renderAll();
