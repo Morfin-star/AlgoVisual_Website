@@ -599,6 +599,27 @@
     border: 1px dashed var(--text-faint);
   }
 
+  .paid-badge, .partial-badge {
+    display: inline-block;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .paid-badge {
+    background: rgba(165, 229, 238, 0.16);
+    color: var(--menta);
+    border: 1px solid var(--menta);
+  }
+
+  .partial-badge {
+    background: rgba(240, 139, 200, 0.14);
+    color: var(--rosa-fuerte);
+    border: 1px solid var(--rosa-fuerte);
+  }
+
   .budget-compare {
     margin-top: 28px;
     background: var(--surface);
@@ -1108,8 +1129,8 @@
       <div class="budget-card budget-card--egresos">
         <h3>Egresos</h3>
         <table class="budget">
-          <tr><td>Vuelos organizadora</td><td class="amount">$180.000</td></tr>
-          <tr><td>Cachet / vuelos idol invitada</td><td class="amount">$200.000</td></tr>
+          <tr><td>Vuelos organizadora</td><td class="amount">$170.000 <span class="paid-badge">Pagado</span></td></tr>
+          <tr><td>Cachet / vuelos idol invitada</td><td class="amount">$200.000 <span class="partial-badge">Pagado $100.000</span></td></tr>
           <tr><td>DJ invitado 1</td><td class="amount">$150.000</td></tr>
           <tr><td>DJ invitado 2</td><td class="amount">$150.000</td></tr>
           <tr><td>Premio 1er lugar cosplay</td><td class="amount">$200.000</td></tr>
@@ -1120,9 +1141,9 @@
           <tr><td>Decoración</td><td class="amount">$305.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr><td>Espacio / backdrop para fotos</td><td class="amount">$152.000 <span class="pending-badge">Estimado</span></td></tr>
           <tr><td>Pauta publicitaria</td><td class="amount">$150.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr><td>Pago a influencers</td><td class="amount">$100.000 <span class="pending-badge">Estimado</span></td></tr>
-          <tr class="total"><td>Egresos confirmados</td><td class="amount">$980.000</td></tr>
-          <tr><td class="colchon-label">Colchón / reserva</td><td class="amount colchon-amount">$152.000</td></tr>
+          <tr><td>Pago a influencers</td><td class="amount">$100.000 <span class="paid-badge">Pagado</span></td></tr>
+          <tr class="total"><td>Egresos confirmados</td><td class="amount">$1.070.000</td></tr>
+          <tr><td class="colchon-label">Colchón / reserva</td><td class="amount colchon-amount">$162.000</td></tr>
           <tr class="total"><td>Egresos totales</td><td class="amount">$2.000.000</td></tr>
         </table>
       </div>
@@ -1136,15 +1157,15 @@
       </div>
       <div class="budget-compare__row">
         <span class="budget-compare__label">Egresos confirmados</span>
-        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:49%"></span></span>
-        <span class="budget-compare__amount">$980.000</span>
+        <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:53.5%"></span></span>
+        <span class="budget-compare__amount">$1.070.000</span>
       </div>
       <div class="budget-compare__row">
         <span class="budget-compare__label">Egresos totales (con colchón)</span>
         <span class="budget-compare__track"><span class="budget-compare__fill budget-compare__fill--out" style="width:100%"></span></span>
         <span class="budget-compare__amount">$2.000.000</span>
       </div>
-      <p class="budget-note">El ingreso fijo ($2.000.000) queda completamente asignado: egresos confirmados + estimados + un colchón de $152.000 de margen de seguridad. Ese colchón no es ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
+      <p class="budget-note">El ingreso fijo ($2.000.000) queda completamente asignado: egresos confirmados + estimados + un colchón de $162.000 de margen de seguridad. Ese colchón no es ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.</p>
     </div>
   </div>
 </section>
@@ -1160,7 +1181,7 @@
     <div class="equilibrio-box" id="equilibrio-box"><!-- filled by JS --></div>
 
     <div class="scenario-grid" id="scenario-grid"><!-- filled by JS --></div>
-    <p class="budget-note">Las tres tarjetas usan el mismo presupuesto (escenario medio, $1.848.000 en egresos totales) — la única variable es cuánto se vende. La ganancia total ya resta lo necesario para recuperar la inversión; el pago a La Mecánica es aparte, no está descontado de la ganancia.</p>
+    <p class="budget-note">Las tres tarjetas usan el mismo presupuesto (escenario medio, $1.838.000 en egresos totales) — la única variable es cuánto se vende. La ganancia total ya resta lo necesario para recuperar la inversión; el pago a La Mecánica es aparte, no está descontado de la ganancia.</p>
 
     <div class="risk-box" id="risk-box"><!-- filled by JS --></div>
   </div>
@@ -1220,7 +1241,7 @@
   }
 
   // --- editable ticket data ---
-  const boletasVendidas = { preventa1: 21, preventa2: 0, taquilla: 0 };
+  const boletasVendidas = { preventa1: 24, preventa2: 0, taquilla: 0 };
   const cupoPorEtapa = { preventa1: 60, preventa2: 100, taquilla: 40 };
 
   const tiers = [
@@ -1261,10 +1282,10 @@
   // --- meta: recuperar la inversión ---
   const ingresosFijos = 2000000; // patrocinios + inversión propia
   const sponsorsFijos = 1200000; // Maruchan + Küül, sin contar la inversión propia
-  const egresosConfirmados = 980000; // incluye $300.000 en premios de cosplay
+  const egresosConfirmados = 1070000; // incluye $300.000 en premios de cosplay + $100.000 de influencers ya pagado (movido de estimado a confirmado)
   const egresosPendientesEstimado = {
     bajo: ingresosFijos - egresosConfirmados, // por definición: egresos totales = ingreso fijo exacto, punto de equilibrio
-    medio: 868000, // manillas 121k + tarjetas 40k + decoración 305k + espacio 152k + pauta 150k + influencers 100k (pauta e influencers fijados por Alejandra; colchón resultante 152k)
+    medio: 768000, // manillas 121k + tarjetas 40k + decoración 305k + espacio 152k + pauta 150k (influencers ya pagado, movido a confirmados; colchón resultante 162k)
     alto: 1800000,
   };
 
