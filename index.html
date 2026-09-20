@@ -63,8 +63,21 @@
   .d-card-name{ font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; color:var(--ink); margin:9px 0 0; }
   .d-strip-hero .d-card-name{ display:none; }
 
+  /* entrada de las ventanas de proyecto (AnimatedGroup): la ventana hace "pop" (preset zoom, con rebote)
+     y cada bloque interno entra escalonado cada 0.1s (preset slide) */
+  .win-overlay:not([hidden]){ animation:ag-container .25s ease-out both; }
+  .win-overlay:not([hidden]) .win-modal{ animation:ag-pop .45s cubic-bezier(.34,1.56,.64,1) both; }
+  .win-overlay:not([hidden]) .win-content > *{ animation:ag-item .5s cubic-bezier(.22,1,.36,1) both; animation-delay:calc(var(--i,8) * .1s + .15s); }
+  .win-content > :nth-child(1){ --i:0; } .win-content > :nth-child(2){ --i:1; } .win-content > :nth-child(3){ --i:2; }
+  .win-content > :nth-child(4){ --i:3; } .win-content > :nth-child(5){ --i:4; } .win-content > :nth-child(6){ --i:5; }
+  .win-content > :nth-child(7){ --i:6; } .win-content > :nth-child(8){ --i:7; }
+  @keyframes ag-container{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes ag-pop{ from{ opacity:0; transform:scale(.5); } to{ opacity:1; transform:none; } }
+  @keyframes ag-item{ from{ opacity:0; transform:translateY(20px); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion:reduce){ .win-overlay:not([hidden]), .win-overlay:not([hidden]) .win-modal, .win-overlay:not([hidden]) .win-content > *{ animation:none; } }
+
   /* proyectos / mosaico */
-  .mosaic-wrap{ padding:24px 40px 60px; position:relative; max-width:1360px; margin:0 auto; }
+  .mosaic-wrap{ scroll-margin-top:70px; padding:24px 40px 60px; position:relative; max-width:1360px; margin:0 auto; }
   .mosaic-eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#9a9488; margin:0 0 6px; }
   .mosaic-title{ font-family:'Syne',sans-serif; font-weight:700; font-size:1.7rem; color:var(--ink); margin:0 0 26px; }
   .mosaic-grid{ display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:10px; }
@@ -201,6 +214,29 @@
     .d-nav, .d-hero, .mosaic-wrap{ padding-left:20px; padding-right:20px; }
     .mosaic-grid{ grid-template-columns:repeat(2,1fr); grid-auto-rows:130px; }
     .mosaic-tile.big{ grid-column:span 2; grid-row:span 1; }
+    /* carrusel: oculto en celular, ahi se usa el mosaico */
+    .d-strip{ display:none; }
+    .d-card{ flex:0 0 260px; }
+    .d-thumb, video.d-thumb{ height:190px; }
+    .d-strip-track{ gap:10px; padding-left:20px; animation-duration:34s; }
+    /* hero */
+    .d-hero{ gap:0; padding-top:36px; padding-bottom:20px; position:relative; }
+    .d-greeting{ margin-bottom:14px; }
+    .d-fish-opt{ position:absolute; top:18px; right:10px; }
+    .d-fish-stack, .d-fish-video{ width:100px; }
+    .d-skill-btns{ gap:8px; margin-top:20px; }
+    .d-skill-btn{ padding:9px 16px 9px 12px; }
+    .d-skill-btn span{ font-size:14px; }
+    /* ventanas de proyecto */
+    .win-overlay{ padding:10px; align-items:flex-end; }
+    .win-modal{ width:100%; }
+    .win-content{ max-height:calc(100vh - 96px); max-height:calc(100dvh - 96px); }
+    /* visor de fotos */
+    .photo-lightbox{ padding:56px 10px 60px; }
+    .photo-lightbox-close{ top:10px; right:10px; width:38px; height:38px; }
+    .photo-lightbox-nav{ width:38px; height:38px; font-size:26px; }
+    .photo-lightbox-nav.prev{ left:8px; }
+    .photo-lightbox-nav.next{ right:8px; }
   }
 </style>
 </head>
@@ -308,7 +344,7 @@
         <div class="d-card" onclick="document.getElementById('win-morfin').hidden=false"><video class="d-thumb" src="assets/morfin/portada-loop.mp4" poster="assets/morfin/portada.jpg" autoplay muted loop playsinline style="object-fit:cover;"></video><p class="d-card-name">Morfin</p></div>
       </div>
     </div>
-    <div class="mosaic-wrap">
+    <div class="mosaic-wrap" id="mosaico">
       <p class="mosaic-eyebrow">trabajo seleccionado</p>
       <h2 class="mosaic-title">Proyectos</h2>
       <div class="mosaic-grid">
@@ -328,7 +364,7 @@
     <div class="win-modal" style="border-color:#1a2540">
       <div class="win-titlebar" style="background:linear-gradient(#3a3f6b,#1a2540); border-color:#0f1730"><span style="color:#dfe3f2">INSONO.mp4</span><div class="win-btns"><div class="win-btn">–</div><div class="win-btn">□</div><div class="win-btn close" onclick="document.getElementById('win-insono').hidden=true">X</div></div></div>
       <div class="win-content" style="padding-left:0; padding-right:0; padding-top:0;">
-        <video src="assets/insono/insono-poster.mp4" controls autoplay loop muted style="width:100%; height:auto; display:block; background:#000; margin-bottom:22px;"></video>
+        <video src="assets/insono/insono-poster.mp4" autoplay loop muted style="width:100%; height:auto; display:block; background:#000; margin-bottom:22px;"></video>
         <div style="padding:0 26px;">
         <h5>INSONO</h5>
         <p>Videoclip · contenido de marca · Estrategia de Lanzamiento</p>
@@ -371,7 +407,7 @@
     <div class="win-modal" style="border-color:#2a1240">
       <div class="win-titlebar" style="background:linear-gradient(#4a1f5e,#2a1240); border-color:#1a0a28"><span style="color:#ecdcf2">Aquelarre.mp4</span><div class="win-btns"><div class="win-btn">–</div><div class="win-btn">□</div><div class="win-btn close" onclick="document.getElementById('win-aquelarre').hidden=true">X</div></div></div>
       <div class="win-content">
-        <video src="assets/aquelarre/poster.mp4" controls autoplay loop muted playsinline style="width:calc(100% + 52px); max-width:none; height:auto; display:block; background:#000; margin:-26px -26px 22px;"></video>
+        <video src="assets/aquelarre/poster.mp4" autoplay loop muted playsinline style="width:calc(100% + 52px); max-width:none; height:auto; display:block; background:#000; margin:-26px -26px 22px;"></video>
         <span class="win-type">redes</span>
         <h5>El Aquelarre</h5>
         <p>Proyecto personal que llevo junto a Daydreaming y Glizcan. Soy la CEO, Directora Creativa, Content Strategist y Editora Principal.</p>
@@ -395,7 +431,7 @@
       <div class="win-titlebar" style="background:linear-gradient(#8aa66a,#5a7a4a); border-color:#3f5834"><span style="color:#1c2415">SpiderLily.jpg</span><div class="win-btns"><div class="win-btn">–</div><div class="win-btn">□</div><div class="win-btn close" onclick="document.getElementById('win-spiderlily').hidden=true">X</div></div></div>
       <div class="win-content">
         <div class="sl-top">
-          <video src="assets/spiderlily/harmonias-h.mp4" controls autoplay loop muted playsinline></video>
+          <video src="assets/spiderlily/harmonias-h.mp4" autoplay loop muted playsinline></video>
         </div>
         <h5>Spider Lily</h5>
         <p>Content para Redes Sociales - Branding</p>
@@ -412,11 +448,10 @@
   </div>
 
   <div class="win-overlay" id="win-logitech" hidden>
-    <div class="win-modal" style="border-color:#1f5aa8">
+    <div class="win-modal" style="border-color:#1f5aa8; width:min(100%,420px)">
       <div class="win-titlebar" style="background:linear-gradient(90deg,#1f5aa8,#c94f8a); border-color:#163f78"><span style="color:#fff">Logitech.mp4</span><div class="win-btns"><div class="win-btn">–</div><div class="win-btn">□</div><div class="win-btn close" onclick="document.getElementById('win-logitech').hidden=true">X</div></div></div>
       <div class="win-content">
-        <span class="win-type">video</span>
-        <video class="win-thumb-video" src="assets/logitech/video.mp4" controls poster="assets/logitech/portada.jpg"></video>
+        <video src="assets/logitech/video-web.mp4" poster="assets/logitech/portada.jpg" autoplay loop muted playsinline style="width:calc(100% + 52px); max-width:none; height:auto; display:block; background:#000; margin:-26px -26px 22px;"></video>
         <h5>Logitech</h5>
         <p>Dirección creativa para campaña de marca.</p>
         <ul class="win-specs">
@@ -490,7 +525,7 @@
     <div class="win-modal" style="border-color:#3a1256">
       <div class="win-titlebar" style="background:linear-gradient(90deg,#3a1256,#ff2e88); border-color:#280b3d"><span style="color:#fff">Morfin.mp4</span><div class="win-btns"><div class="win-btn">–</div><div class="win-btn">□</div><div class="win-btn close" onclick="document.getElementById('win-morfin').hidden=true">X</div></div></div>
       <div class="win-content">
-        <video src="assets/morfin/poster.mp4" controls autoplay loop muted playsinline style="width:calc(100% + 52px); max-width:none; height:auto; display:block; background:#000; margin:-26px -26px 22px;"></video>
+        <video src="assets/morfin/poster.mp4" autoplay loop muted playsinline style="width:calc(100% + 52px); max-width:none; height:auto; display:block; background:#000; margin:-26px -26px 22px;"></video>
         <h5>Morfin</h5>
         <p>Contenido de creadora — gaming para comunidad femenina.</p>
       </div>
@@ -541,7 +576,22 @@
   </div>
 
   <script>
+    // en celular el mosaico de proyectos vive en el inicio y el carrusel se oculta
+    const mobileMQ = window.matchMedia('(max-width:640px)');
+    function placeMosaic() {
+      const m = document.getElementById('mosaico');
+      if (mobileMQ.matches) {
+        const c = document.getElementById('contacto');
+        c.parentNode.insertBefore(m, c);
+      } else {
+        document.getElementById('view-proyectos').appendChild(m);
+      }
+    }
+    mobileMQ.addEventListener('change', placeMosaic);
+    placeMosaic();
+
     function showView(name, scrollToId) {
+      if (name === 'proyectos' && mobileMQ.matches) { name = 'home'; scrollToId = 'mosaico'; }
       document.querySelectorAll('.view').forEach(v => v.hidden = (v.id !== 'view-' + name));
       document.querySelectorAll('[data-view-btn]').forEach(b => b.classList.toggle('active', b.dataset.viewBtn === name));
       if (scrollToId) {
@@ -552,6 +602,7 @@
         window.scrollTo(0, 0);
       }
     }
+
 
     let lbList = [], lbIndex = 0;
     function lbRender() {
