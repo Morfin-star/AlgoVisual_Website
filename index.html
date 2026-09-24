@@ -3,7 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>algo_visual — prototipo Síntesis</title>
+<title>Alejandra Gómez — Editora de video y creadora de contenido en Madrid | algo_visual</title>
+<meta name="description" content="Portfolio de Alejandra Gómez (algo_visual): edición de video, fotografía, estrategia de contenido y dirección creativa en Madrid. Comunicadora audiovisual con background en psicología.">
+<link rel="canonical" href="https://algovisual.xyz/">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://algovisual.xyz/">
+<meta property="og:site_name" content="algo_visual">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Alejandra Gómez — Edición de video y contenido | algo_visual">
+<meta property="og:description" content="Edición de video, fotografía, estrategia de contenido y dirección creativa. Madrid · disponible para proyectos freelance.">
+<meta property="og:image" content="https://algovisual.xyz/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://algovisual.xyz/assets/og-image.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Alejandra Gómez","alternateName":"algo_visual","url":"https://algovisual.xyz/","image":"https://algovisual.xyz/assets/foto-perfil.webp","jobTitle":"Editora de video y creadora de contenido","email":"mailto:laura.a.gomez99@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Madrid","addressCountry":"ES"},"sameAs":["https://www.linkedin.com/in/lauraagomezp/"],"knowsAbout":["Edición de video","Fotografía","Estrategia de contenido","Dirección creativa","Motion graphics"]}</script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=Outfit:wght@300;400;500&family=Caveat:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;}
@@ -174,6 +189,9 @@
   .ab-bio b{ font-weight:500; color:var(--ink); }
   .ab-bio em{ font-style:normal; color:var(--accent); }
   .ab-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:10px 22px; padding-top:20px; border-top:1px solid var(--line); max-width:34em; font-family:'Outfit',sans-serif; font-size:13px; color:var(--muted); }
+  .ab-cv{ display:inline-flex; align-items:center; gap:9px; margin-top:22px; padding:12px 22px; border-radius:999px; background:var(--ink); color:var(--bg); font-family:'Outfit',sans-serif; font-size:14px; font-weight:500; text-decoration:none; transition:background .2s ease; }
+  .ab-cv:hover{ background:var(--accent); }
+  .ab-cv svg{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   .ab-meta span{ display:inline-flex; align-items:center; gap:7px; }
   .ab-meta svg{ width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .ab-dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); animation:ab-pulse 2.4s ease-in-out infinite; }
@@ -229,6 +247,7 @@
     .d-skill-btn span{ font-size:14px; }
     /* ventanas de proyecto */
     .win-overlay{ padding:10px; align-items:flex-end; }
+    .win-btn.close{ width:34px; height:28px; line-height:26px; font-size:14px; }
     .win-modal{ width:100%; }
     .win-content{ max-height:calc(100vh - 96px); max-height:calc(100dvh - 96px); }
     /* visor de fotos */
@@ -257,17 +276,17 @@
   <section id="view-home" class="view">
     <div class="home-inner">
       <div class="d-bubbles">
-        <img class="d-bubble" src="assets/doodles/bubble_6.png" style="left:2px; width:14px; animation-duration:7s; animation-delay:-1s;">
-        <img class="d-bubble" src="assets/doodles/bubble_5.png" style="left:16px; width:22px; animation-duration:9.5s; animation-delay:-4s;">
-        <img class="d-bubble" src="assets/doodles/bubble_2.png" style="left:6px; width:16px; animation-duration:8s; animation-delay:-2.5s;">
-        <img class="d-bubble" src="assets/doodles/bubble_7.png" style="left:20px; width:20px; animation-duration:11s; animation-delay:-6s;">
-        <img class="d-bubble" src="assets/doodles/bubble_8.png" style="left:10px; width:15px; animation-duration:8.5s; animation-delay:-3.2s;">
-        <img class="d-bubble" src="assets/doodles/bubble_1.png" style="left:14px; width:19px; animation-duration:10s; animation-delay:-7s;">
-        <img class="d-bubble" src="assets/doodles/bubble_9.png" style="left:24px; width:17px; animation-duration:9s; animation-delay:-0.5s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_6.png" style="left:2px; width:14px; animation-duration:7s; animation-delay:-1s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_5.png" style="left:16px; width:22px; animation-duration:9.5s; animation-delay:-4s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_2.png" style="left:6px; width:16px; animation-duration:8s; animation-delay:-2.5s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_7.png" style="left:20px; width:20px; animation-duration:11s; animation-delay:-6s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_8.png" style="left:10px; width:15px; animation-duration:8.5s; animation-delay:-3.2s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_1.png" style="left:14px; width:19px; animation-duration:10s; animation-delay:-7s;">
+        <img alt="" class="d-bubble" src="assets/doodles/bubble_9.png" style="left:24px; width:17px; animation-duration:9s; animation-delay:-0.5s;">
       </div>
       <div class="d-hero">
       <div class="d-hero-text">
-        <h3 class="d-greeting">hola, soy Ale</h3>
+        <h1 class="d-greeting">hola, soy Ale</h1>
         <p class="d-desc">Soy <strong>comunicadora audiovisual</strong> con background en psicología, una combinación que me ayuda a crear contenido que no solo se ve bien, sino que conecta de verdad.</p>
         <ul class="d-skill-btns">
           <li class="d-skill-btn">
@@ -319,7 +338,7 @@
       <h4>¿hablamos?</h4>
       <p>Disponible para proyectos freelance.</p>
       <div class="d-contact-links">
-        <a href="https://mail.google.com/mail/?view=cm&to=laura.a.gomez99@gmail.com" target="_blank">Escribir un email</a>
+        <a href="mailto:laura.a.gomez99@gmail.com">laura.a.gomez99@gmail.com</a>
         <a href="https://www.linkedin.com/in/lauraagomezp/" target="_blank">LinkedIn</a>
       </div>
     </div>
@@ -349,7 +368,7 @@
     <div class="win-modal" style="border-color:#1a2540">
       <div class="win-titlebar" style="background:linear-gradient(#3a3f6b,#1a2540); border-color:#0f1730"><span style="color:#dfe3f2">INSONO.mp4</span><div class="win-btns"><div class="win-btn">–</div><div class="win-btn">□</div><div class="win-btn close" onclick="document.getElementById('win-insono').hidden=true">X</div></div></div>
       <div class="win-content" style="padding-left:0; padding-right:0; padding-top:0;">
-        <video src="assets/insono/insono-poster.mp4" autoplay loop muted style="width:100%; height:auto; display:block; background:#000; margin-bottom:22px;"></video>
+        <video src="assets/insono/insono-poster-web.mp4" autoplay loop muted style="width:100%; height:auto; display:block; background:#000; margin-bottom:22px;"></video>
         <div style="padding:0 26px;">
         <h5>INSONO</h5>
         <p>Videoclip · contenido de marca · Estrategia de Lanzamiento</p>
@@ -472,21 +491,21 @@
           <p>Fotografía y edición · identidad de marca para un taller de cerámica.</p>
           <p class="win-subhead" style="margin-top:8px;">Fotografías del proyecto</p>
           <div class="win-mosaic">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_001.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_001.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_002.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_002.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_003.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_003.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_004.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_004.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_005.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_005.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_006.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_006.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_007.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_007.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_008.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_008.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_009.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_009.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_010.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_010.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_01.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_01.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_02.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_02.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_03.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_03.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_04.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_04.jpg')">
-            <img class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_05.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_05.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_001.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_001.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_002.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_002.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_003.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_003.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_004.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_004.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_005.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_005.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_006.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_006.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_007.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_007.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_008.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_008.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_009.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_009.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Ceramica_Vivas_010.jpg" onclick="openLightbox('assets/ceramica/gallery/Ceramica_Vivas_010.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_01.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_01.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_02.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_02.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_03.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_03.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_04.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_04.jpg')">
+            <img alt="Cerámica Vivas — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/ceramica/gallery/Fotos_Contexto_05.jpg" onclick="openLightbox('assets/ceramica/gallery/Fotos_Contexto_05.jpg')">
           </div>
         </div>
       </div>
@@ -503,18 +522,18 @@
           <p>Fotografía y Retoque</p>
           <p class="win-subhead" style="margin-top:8px;">Fotografías del proyecto</p>
           <div class="win-mosaic">
-            <img class="win-mosaic-item" src="assets/panoletas/modelos-1.jpg" onclick="openLightbox('assets/panoletas/modelos-1.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/modelos-7.jpg" onclick="openLightbox('assets/panoletas/modelos-7.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/modelos-11.jpg" onclick="openLightbox('assets/panoletas/modelos-11.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/modelos-17.jpg" onclick="openLightbox('assets/panoletas/modelos-17.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/modelos-19.jpg" onclick="openLightbox('assets/panoletas/modelos-19.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-b1.jpg" onclick="openLightbox('assets/panoletas/prod-b1.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-b3.jpg" onclick="openLightbox('assets/panoletas/prod-b3.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-b4.jpg" onclick="openLightbox('assets/panoletas/prod-b4.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-bd1.jpg" onclick="openLightbox('assets/panoletas/prod-bd1.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-bd2.jpg" onclick="openLightbox('assets/panoletas/prod-bd2.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-p4.jpg" onclick="openLightbox('assets/panoletas/prod-p4.jpg')">
-            <img class="win-mosaic-item" src="assets/panoletas/prod-pd4.jpg" onclick="openLightbox('assets/panoletas/prod-pd4.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/modelos-1.jpg" onclick="openLightbox('assets/panoletas/modelos-1.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/modelos-7.jpg" onclick="openLightbox('assets/panoletas/modelos-7.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/modelos-11.jpg" onclick="openLightbox('assets/panoletas/modelos-11.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/modelos-17.jpg" onclick="openLightbox('assets/panoletas/modelos-17.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/modelos-19.jpg" onclick="openLightbox('assets/panoletas/modelos-19.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-b1.jpg" onclick="openLightbox('assets/panoletas/prod-b1.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-b3.jpg" onclick="openLightbox('assets/panoletas/prod-b3.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-b4.jpg" onclick="openLightbox('assets/panoletas/prod-b4.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-bd1.jpg" onclick="openLightbox('assets/panoletas/prod-bd1.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-bd2.jpg" onclick="openLightbox('assets/panoletas/prod-bd2.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-p4.jpg" onclick="openLightbox('assets/panoletas/prod-p4.jpg')">
+            <img alt="Ariana — proyecto de Alejandra Gómez" class="win-mosaic-item" src="assets/panoletas/prod-pd4.jpg" onclick="openLightbox('assets/panoletas/prod-pd4.jpg')">
           </div>
         </div>
       </div>
@@ -547,6 +566,7 @@
             <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Madrid</span>
             <span><i class="ab-dot"></i>Disponible para proyectos</span>
           </div>
+          <a class="ab-cv" href="CV_LauraAlejandraGomez.pdf" download>Descargar CV <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg></a>
         </div>
         <div class="ab-photo">
           <figure><img src="assets/foto-perfil.webp" alt="Alejandra Gómez"></figure>
@@ -587,6 +607,9 @@
         document.getElementById('view-proyectos').appendChild(m);
       }
     }
+    // cerrar ventanas tocando afuera o con Escape
+    document.querySelectorAll('.win-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) o.hidden = true; }));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.win-overlay').forEach(o => o.hidden = true); });
     mobileMQ.addEventListener('change', placeMosaic);
     placeMosaic();
 
