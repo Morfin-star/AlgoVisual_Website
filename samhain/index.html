@@ -1114,7 +1114,7 @@
   <div class="wrap">
     <p class="eyebrow">Transparencia</p>
     <h2 class="section-title">Presupuesto del evento</h2>
-    <p class="section-sub">Así se financia Samhain — de dónde sale la plata y en qué se va. Los ítems marcados "Estimado" todavía están en cotización — la cifra es un cálculo interno de planeación, no una cotización cerrada. El colchón no es un gasto real, es margen de seguridad reservado dentro del presupuesto.</p>
+    <p class="section-sub">Así se financia Samhain — de dónde sale la plata y en qué se va. El gasto total estimado suma todo lo que creemos que va a costar el evento: lo que ya tiene precio cerrado + lo que está por cotizar. Los ítems marcados "Por cotizar" todavía no tienen precio cerrado — la cifra es aproximada. El colchón no es un gasto real, es margen de seguridad reservado dentro del presupuesto.</p>
 
     <div class="budget-grid">
       <div class="budget-card budget-card--ingresos">
@@ -1138,7 +1138,7 @@
   <div class="wrap">
     <p class="eyebrow">Meta</p>
     <h2 class="section-title">Recuperar la inversión</h2>
-    <p class="section-sub">Detalle de egresos (confirmados + estimados) más arriba, en "Presupuesto del evento". Primero, cuánto falta vender para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000). Después, la ganancia total y lo que tocaría pagarle a La Mecánica por la barra en tres niveles de venta: 20%, 40% y 80% del aforo.</p>
+    <p class="section-sub">Detalle del gasto total estimado más arriba, en "Presupuesto del evento". Primero, cuánto falta vender para recuperar completo lo que Aquelarre puso de su bolsillo ($800.000). Después, la ganancia total y lo que tocaría pagarle a La Mecánica por la barra en tres niveles de venta: 20%, 40% y 80% del aforo.</p>
 
     <div class="equilibrio-box" id="equilibrio-box"><!-- filled by JS --></div>
 
@@ -1274,7 +1274,7 @@
       } else if (tipo === 'egreso') {
         let pagado = num(r[c.pagado]);
         if (estado === 'pagado' && !pagado) pagado = monto;
-        nuevo.egresos.push({ concepto, monto, pagado, estimado: estado === 'estimado' });
+        nuevo.egresos.push({ concepto, monto, pagado, estimado: estado === 'estimado' || estado === 'por cotizar' });
       } else if (tipo === 'boletas') {
         nuevo.tiers.push({
           label: concepto,
@@ -1332,7 +1332,7 @@
   }
 
   function badgeEgreso(e) {
-    if (e.estimado) return ' <span class="pending-badge">Estimado</span>';
+    if (e.estimado) return ' <span class="pending-badge">Por cotizar</span>';
     if (e.monto > 0 && e.pagado >= e.monto) return ' <span class="paid-badge">Pagado</span>';
     if (e.pagado > 0) return ` <span class="partial-badge">Pagado ${formatCOP(e.pagado)}</span>`;
     return '';
@@ -1349,12 +1349,13 @@
     const deficit = T.colchon < 0;
     document.getElementById('tabla-egresos').innerHTML =
       egresos.map(e => fila(e.concepto, formatCOP(e.monto) + badgeEgreso(e))).join('') +
-      `<tr class="total"><td>Egresos confirmados</td><td class="amount">${formatCOP(T.egresosConfirmados)}</td></tr>` +
-      `<tr><td>Egresos estimados</td><td class="amount">${formatCOP(T.egresosEstimados)}</td></tr>` +
+      `<tr class="total"><td>Gasto total estimado del evento</td><td class="amount">${formatCOP(T.egresosTotales)}</td></tr>` +
+      `<tr><td style="padding-left:14px;color:var(--text-dim)">De eso, con precio cerrado</td><td class="amount" style="color:var(--text-dim)">${formatCOP(T.egresosConfirmados)}</td></tr>` +
+      `<tr><td style="padding-left:14px;color:var(--text-dim)">De eso, por cotizar (aprox.)</td><td class="amount" style="color:var(--text-dim)">${formatCOP(T.egresosEstimados)}</td></tr>` +
       (deficit
         ? `<tr><td class="colchon-label" style="color:var(--rosa-fuerte)">Déficit — faltan</td><td class="amount" style="color:var(--rosa-fuerte)">${formatCOP(-T.colchon)}</td></tr>`
         : `<tr><td class="colchon-label">Colchón / reserva</td><td class="amount colchon-amount">${formatCOP(T.colchon)}</td></tr>`) +
-      `<tr class="total"><td>Egresos totales${deficit ? '' : ' (con colchón)'}</td><td class="amount">${formatCOP(T.egresosTotales + Math.max(T.colchon, 0))}</td></tr>`;
+      `<tr class="total"><td>${deficit ? 'Gasto total estimado' : 'Gasto estimado + colchón'}</td><td class="amount">${formatCOP(T.egresosTotales + Math.max(T.colchon, 0))}</td></tr>`;
 
     const escala = Math.max(T.ingresosFijos, T.egresosTotales) || 1;
     const barra = (label, monto, cls) => `
@@ -1364,12 +1365,12 @@
         <span class="budget-compare__amount">${formatCOP(monto)}</span>
       </div>`;
     const nota = deficit
-      ? `Los egresos (${formatCOP(T.egresosTotales)}) superan el ingreso fijo (${formatCOP(T.ingresosFijos)}) por ${formatCOP(-T.colchon)} — ese faltante tiene que salir de la boletería.`
-      : `El ingreso fijo (${formatCOP(T.ingresosFijos)}) queda completamente asignado: egresos confirmados + estimados + un colchón de ${formatCOP(T.colchon)} de margen de seguridad. Ese colchón no es ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.`;
+      ? `El gasto total estimado (${formatCOP(T.egresosTotales)}) supera el ingreso fijo (${formatCOP(T.ingresosFijos)}) por ${formatCOP(-T.colchon)} — ese faltante tiene que salir de la boletería.`
+      : `El ingreso fijo (${formatCOP(T.ingresosFijos)}) cubre el gasto total estimado del evento (${formatCOP(T.egresosTotales)}) y sobra un colchón de ${formatCOP(T.colchon)} de margen de seguridad. Ese colchón no es ganancia del equipo — el detalle está en "Recuperar la inversión" más abajo.`;
     document.getElementById('budget-compare').innerHTML =
       barra('Ingresos', T.ingresosFijos, 'budget-compare__fill--in') +
-      barra('Egresos confirmados', T.egresosConfirmados, 'budget-compare__fill--out') +
-      barra('Egresos totales', T.egresosTotales, deficit ? 'budget-compare__fill--danger' : 'budget-compare__fill--out') +
+      barra('Con precio cerrado', T.egresosConfirmados, 'budget-compare__fill--out') +
+      barra('Gasto total estimado', T.egresosTotales, deficit ? 'budget-compare__fill--danger' : 'budget-compare__fill--out') +
       `<p class="budget-note">${nota}</p>`;
   }
 
@@ -1455,7 +1456,7 @@
 
     el.innerHTML = `
       <p class="equilibrio-box__title">Punto de equilibrio — recuperar la inversión</p>
-      <div class="equilibrio-box__total">${formatCOP(T.egresosTotales)} <small style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);">egresos totales (presupuesto actual)</small></div>
+      <div class="equilibrio-box__total">${formatCOP(T.egresosTotales)} <small style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text-faint);">gasto total estimado del evento</small></div>
       ${colchonLine}
       <p class="equilibrio-box__colchon" style="color:var(--rosa-fuerte);">Meta ajustada por si no se llega al mínimo de barra (${Math.round(GARANTIA_BARRA_PCT * 100)}% a La Mecánica): ${formatCOP(T.metaConBarra)}</p>
       <div class="equilibrio-box__bar-track"><div class="equilibrio-box__bar-fill" style="width:${pct}%"></div></div>
@@ -1490,7 +1491,7 @@
     }).join('');
 
     document.getElementById('scenario-note').textContent =
-      `Las tres tarjetas usan el mismo presupuesto (${formatCOP(T.egresosTotales)} en egresos totales) — la única variable es cuánto se vende. La ganancia total ya resta lo necesario para recuperar la inversión; el pago a La Mecánica es aparte, no está descontado de la ganancia.`;
+      `Las tres tarjetas usan el mismo gasto total estimado (${formatCOP(T.egresosTotales)}) — la única variable es cuánto se vende. La ganancia total ya resta lo necesario para recuperar la inversión; el pago a La Mecánica es aparte, no está descontado de la ganancia.`;
   }
 
   // --- súper meta: 100% del aforo agotado ---
@@ -1504,7 +1505,7 @@
 
     el.innerHTML = `
       <p class="risk-box__title">Súper meta — 100% del aforo (${T.aforo} boletas)</p>
-      <p class="risk-box__text">Si se agotan las ${T.aforo} boletas, con el presupuesto actual de egresos.</p>
+      <p class="risk-box__text">Si se agotan las ${T.aforo} boletas, con el gasto total estimado del evento.</p>
       <p class="risk-box__text" style="margin-bottom:12px;">${formatDetalle(detalle)}</p>
       <div class="risk-box__rows">
         <div class="risk-box__row"><span>Ganancia para el equipo</span><strong class="risk-box__row--ok">${formatCOP(ganancia)}</strong></div>
